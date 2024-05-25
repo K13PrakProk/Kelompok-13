@@ -1,7 +1,6 @@
 import customtkinter as ctk
 import tkinter as tk
 from tkinter import messagebox
-from PIL import Image, ImageTk
 
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("dark-blue")
@@ -94,11 +93,8 @@ def show_payment_page(name, phone, seats, date, time, table):
             options = []
 
         for option in options:
-            image = Image.open(f"{option.lower()}.png")  
-            image = image.resize((100, 50), Image.ANTIALIAS)
-            photo = ImageTk.PhotoImage(image)
-            ctk.CTkButton(payment_options_frame, image=photo, text="", command=lambda opt=option: show_account_form(opt),
-                          height=50, border_width=2, corner_radius=10).pack(anchor='center', padx=20, pady=5)
+            ctk.CTkButton(payment_options_frame, text=option, command=lambda opt=option: show_account_form(opt),
+                          height=30, border_width=2, corner_radius=10).pack(anchor='center', padx=20, pady=5)
 
     for method in payment_methods:
         ctk.CTkButton(payment_methods_frame, text=method, command=lambda m=method: show_payment_options(m),
