@@ -4,12 +4,14 @@ from tkinter import messagebox
 from PIL import Image, ImageTk
 import customtkinter as ctk
 
+
+
 def halaman_utama():
     def on_label_click_resto1():
         # Buat halaman baru untuk restoran Truntum
         window_resto1 = tk.Toplevel(window3)
         window_resto1.title("Truntum")
-        window_resto1.geometry("600x150")
+        window_resto1.geometry("1280x1720")
         window_resto1.configure(bg="black")
         window_resto1.resizable(True, True)
 
@@ -19,7 +21,7 @@ def halaman_utama():
     def on_label_click_resto2():
         # Buat halaman baru untuk restoran Kopi Jahat
         window_resto2 = tk.Toplevel(window3)
-        window_resto2.title("Kopi Jahat")
+        window_resto2.title("Bento Kopi")
         window_resto2.geometry("400x300")
         window_resto2.configure(bg="black")
         window_resto2.resizable(True, True)
@@ -56,7 +58,7 @@ def halaman_utama():
     def on_label_click_resto4():
         # Buat halaman baru untuk restoran Cold 'N Brew
         window_resto4 = tk.Toplevel(window3)
-        window_resto4.title("Say Story")
+        window_resto4.title("La Luna Coffee & Eatery")
         window_resto4.geometry("800x600")
         window_resto4.configure(bg="black")
         window_resto4.resizable(True, True)
@@ -180,12 +182,12 @@ def halaman_utama():
     text.place(x=185, y=110)        
 
 
-    # Restoran 2: Kopi Jahat
+    # Restoran 2: Bento Kopi
     frame2 = Frame(window3, width=600, height=150, bg="white")
     frame2.place(x=30, y=205)
 
     # Menambahkan gambar
-    img1 = Image.open("Kelompok-13/jahat.jpg")
+    img1 = Image.open("Kelompok-13/bento.jpg")
     img1 = img1.resize((170, 150))
     img1 = ImageTk.PhotoImage(img1)
     label1 = tk.Label(frame2, image=img1, bd=0, highlightthickness=0)
@@ -193,11 +195,11 @@ def halaman_utama():
     label1.place(x=0, y=0)
 
     # Membuat label yang terlihat seperti teks biasa dan bisa diklik
-    label = tk.Label(frame2, text="Kopi Jahat", fg="black", bg="white", cursor="hand2", font=("Arial", 14, "bold"))
+    label = tk.Label(frame2, text="Bento Kopi", fg="black", bg="white", cursor="hand2", font=("Arial", 14, "bold"))
     label.place(x=180, y=5)
     label.bind("<Button-1>", lambda event: on_label_click_resto2())     
 
-    img2 = Image.open("Kelompok-13/4.5.png")
+    img2 = Image.open("Kelompok-13/4.png")
     img2 = img2.resize((90, 15))
     img2 = ImageTk.PhotoImage(img2)
     label2 = tk.Label(frame2, image=img2, bd=0, highlightthickness=0)
@@ -205,17 +207,17 @@ def halaman_utama():
     label2.place(x=197, y=30)
 
     text = Text(frame2, height=1, width=3, font=("Arial", 8), bg="white", cursor="arrow", bd=0, highlightthickness=0)
-    text.insert(END, "4,3")
+    text.insert(END, "4,2")
     text.config(state=DISABLED)  # Menonaktifkan edit
     text.place(x=185, y=30)
 
     text = Text(frame2, height=1, width=6, font=("Arial", 8), bg="white", cursor="arrow", bd=0, highlightthickness=0)
-    text.insert(END, "(1.395)")
+    text.insert(END, "(980)")
     text.config(state=DISABLED)  # Menonaktifkan edit
     text.place(x=283, y=30)
 
     text = Text(frame2, height=1, width=30, font=("Arial", 8), bg="white", cursor="arrow", bd=0, highlightthickness=0)
-    text.insert(END, "Kafe • Rp 1-25.000")
+    text.insert(END, "Kedai Kopi • Rp 1-25.000")
     text.config(state=DISABLED)  # Menonaktifkan edit
     text.place(x=185, y=45)
 
@@ -225,7 +227,7 @@ def halaman_utama():
     text.place(x=185, y=73)
 
     text = Text(frame2, height=1, width=50, font=("Arial", 8), bg="white", cursor="arrow", bd=0, highlightthickness=0)
-    text.insert(END, "'Tempat nongkrong dan juga cocok untuk nugas'")
+    text.insert(END, "'Pelayanan ramah dan kantong pelajar untuk masalah menu'")
     text.config(state=DISABLED)  # Menonaktifkan edit
     text.place(x=185, y=65)
 
@@ -237,12 +239,12 @@ def halaman_utama():
     label3.place(x=480, y=45)
 
     text = Text(frame2, height=1, width=30, font=("Arial", 8), bg="white", cursor="arrow", bd=0, highlightthickness=0)
-    text.insert(END, "Kamis TUTUP")
+    text.insert(END, "Setiap Hari")
     text.config(state=DISABLED)  # Menonaktifkan edit
     text.place(x=500, y=30)
 
     text = Text(frame2, height=1, width=30, font=("Arial", 8), bg="white", cursor="arrow", bd=0, highlightthickness=0)
-    text.insert(END, "09.00 - 22.00")
+    text.insert(END, "09.00 - 01.00")
     text.config(state=DISABLED)  # Menonaktifkan edit
     text.place(x=500, y=45)
 
@@ -252,7 +254,7 @@ def halaman_utama():
     text.place(x=185, y=95)
 
     text = Text(frame2, height=3, width=45, font=("Arial", 8, "italic"), bg="white", cursor="arrow", bd=0, highlightthickness=0)
-    text.insert(END, "Jl. Antariksa II, Kentingan, Kec. Jebres, Kota Surakarta, Jawa Tengah 57126")
+    text.insert(END, "Jl. Agung Timur No.14, Mojosongo, Kec. Jebres, Kota Surakarta, Jawa Tengah 57181")
     text.config(state=DISABLED)  # Menonaktifkan edit
     text.place(x=185, y=110)
 
@@ -332,12 +334,12 @@ def halaman_utama():
     text.config(state=DISABLED)  # Menonaktifkan edit
     text.place(x=185, y=110)
 
-    # Restoran 4 : Say Story
+    # Restoran 4 : La Luna Coffee & Eatery
     frame4 = Frame(window3, width=600, height=150, bg="white")
     frame4.place(x=30, y=515)
 
     # Menambahkan gambar
-    img1 = Image.open("Kelompok-13/say.jpg")
+    img1 = Image.open("Kelompok-13/luna.jpg")
     img1 = img1.resize((170, 150))
     img1 = ImageTk.PhotoImage(img1)
     label1 = tk.Label(frame4, image=img1, bd=0, highlightthickness=0)
@@ -345,7 +347,7 @@ def halaman_utama():
     label1.place(x=0, y=0)
 
     # Membuat label yang terlihat seperti teks biasa dan bisa diklik
-    label = tk.Label(frame4, text="Say Story", fg="black", bg="white", cursor="hand2", font=("Arial", 14, "bold"))
+    label = tk.Label(frame4, text="La Luna Coffee & Eatery", fg="black", bg="white", cursor="hand2", font=("Arial", 14, "bold"))
     label.place(x=180, y=5)
     label.bind("<Button-1>", lambda event: on_label_click_resto4())
 
@@ -357,12 +359,12 @@ def halaman_utama():
     label2.place(x=197, y=30)
 
     text = Text(frame4, height=1, width=3, font=("Arial", 8), bg="white", cursor="arrow", bd=0, highlightthickness=0)
-    text.insert(END, "4,3")
+    text.insert(END, "4,7")
     text.config(state=DISABLED)  # Menonaktifkan edit
     text.place(x=185, y=30)
 
     text = Text(frame4, height=1, width=6, font=("Arial", 8), bg="white", cursor="arrow", bd=0, highlightthickness=0)
-    text.insert(END, "(931)")
+    text.insert(END, "(167)")
     text.config(state=DISABLED)  # Menonaktifkan edit
     text.place(x=283, y=30)
 
@@ -377,7 +379,7 @@ def halaman_utama():
     text.place(x=185, y=73)
 
     text = Text(frame4, height=1, width=50, font=("Arial", 8), bg="white", cursor="arrow", bd=0, highlightthickness=0)
-    text.insert(END, "'Suasananya nyaman, view bagus, menu terjangkau'")
+    text.insert(END, "'Tempat makan dan nongkrong yg asyik bgt'")
     text.config(state=DISABLED)  # Menonaktifkan edit
     text.place(x=185, y=65)
 
@@ -394,7 +396,7 @@ def halaman_utama():
     text.place(x=500, y=30)
 
     text = Text(frame4, height=1, width=30, font=("Arial", 8), bg="white", cursor="arrow", bd=0, highlightthickness=0)
-    text.insert(END, "10.00 - 22.00")
+    text.insert(END, "10.00 - 00.00")
     text.config(state=DISABLED)  # Menonaktifkan edit
     text.place(x=500, y=45)
 
@@ -404,7 +406,7 @@ def halaman_utama():
     text.place(x=185, y=95)
 
     text = Text(frame4, height=3, width=45, font=("Arial", 8, "italic"), bg="white", cursor="arrow", bd=0, highlightthickness=0)
-    text.insert(END, "Jl. Kabut No.38, Mojosongo, Kec. Jebres, Kota Surakarta, Jawa Tengah 57126")
+    text.insert(END, "Jl. Ir. Sutami No.64, Jebres, Kec. Jebres, Kota Surakarta, Jawa Tengah 57125")
     text.config(state=DISABLED)  # Menonaktifkan edit
     text.place(x=185, y=110)
 

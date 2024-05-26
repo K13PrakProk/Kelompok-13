@@ -3,36 +3,8 @@ import tkinter as tk
 from tkinter import messagebox
 from PIL import Image, ImageTk
 
-def on_label_click(pili):
-    # Membuat jendela baru
-    new_window = tk.Toplevel()
-    new_window.title("Menu Pemesanan")
-    new_window.geometry("600x400")
-    
-    # Menambahkan gambar latar belakang
-    bg_image = Image.open("Kelompok-13/truntum.jpg")
-    bg_image = bg_image.resize((600, 400))
-    bg_image = ImageTk.PhotoImage(bg_image)
-    
-    bg_label = tk.Label(new_window, image=bg_image)
-    bg_label.image = bg_image
-    bg_label.place(x=0, y=0, relwidth=1, relheight=1)
-
-    # Menambahkan label menu pemesanan
-    def on_menu_click(menu_name):
-        print(f"Menu {menu_name} dipilih")
-
-    menu1 = tk.Label(new_window, text="Menu 1", fg="black", bg="white", cursor="hand2", font=("Arial", 14, "bold"))
-    menu1.place(x=50, y=50)
-    menu1.bind("<Button-1>", lambda event: on_menu_click("Menu 1"))
-
-    menu2 = tk.Label(new_window, text="Menu 2", fg="black", bg="white", cursor="hand2", font=("Arial", 14, "bold"))
-    menu2.place(x=50, y=100)
-    menu2.bind("<Button-1>", lambda event: on_menu_click("Menu 2"))
-
-    menu3 = tk.Label(new_window, text="Menu 3", fg="black", bg="white", cursor="hand2", font=("Arial", 14, "bold"))
-    menu3.place(x=50, y=150)
-    menu3.bind("<Button-1>", lambda event: on_menu_click("Menu 3"))
+def  on_label_click (event):
+    messagebox.showinfo ( "Info" , "Natahati Kopi diklik!" )
 
 def halaman_utama():
     #window1.destroy()
