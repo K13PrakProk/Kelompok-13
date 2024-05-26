@@ -2,6 +2,7 @@ from tkinter import *
 import tkinter as tk
 from tkinter import messagebox
 from PIL import Image, ImageTk
+import customtkinter as ctk
 
 def halaman_utama():
     def on_label_click_resto1():
@@ -36,17 +37,21 @@ def halaman_utama():
         # Buat halaman baru untuk restoran Cold 'N Brew
         window_resto3 = tk.Toplevel(window3)
         window_resto3.title("Cold 'N Brew")
-        window_resto3.geometry("800x600")
+        window_resto3.geometry("620x720")
         window_resto3.configure(bg="black")
         window_resto3.resizable(True, True)
 
         # Menambahkan gambar background
-        img_bg = Image.open("D:/kl13/Kelompok-13/brewbg.jpg")
-        img_bg = img_bg.resize((400, 300))
+        img_bg = Image.open("D:/kl13/Kelompok-13/brewlg.webp")
+        img_bg = img_bg.resize((300,400))
         bg_image = ImageTk.PhotoImage(img_bg)
-        bg_label = tk.Label(window_resto3, image=bg_image)
+        bg_label = tk.Label(window_resto3, image=bg_image, bd=0, highlightthickness=0)
         bg_label.image = bg_image
-        bg_label.place(x=0, y=0, relwidth=1, relheight=1)
+        bg_label.place(x=0, y=-110)
+
+        label = tk.Label(window_resto3, text="DAFTAR MENU", fg="white", bg="black", font=("Helvetica", 22, "bold"))
+        label.place(x=200, y=190)
+
 
     def on_label_click_resto4():
         # Buat halaman baru untuk restoran Cold 'N Brew
