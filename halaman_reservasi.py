@@ -1,6 +1,8 @@
 import customtkinter as ctk
 import tkinter as tk
 from tkinter import messagebox
+import webbrowser
+import os
 
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("dark-blue")
@@ -12,6 +14,8 @@ app.geometry("500x600")
 frame = ctk.CTkFrame(app, corner_radius=15)
 frame.pack(fill='both', expand=True, padx=20, pady=20)
 
+occupied_tables = set()
+
 def add_entry(parent):
     entry = ctk.CTkEntry(parent, height=30, border_width=2, corner_radius=10)
     entry.pack(padx=10, pady=5, fill='x')
@@ -20,7 +24,7 @@ def add_entry(parent):
 def choose_table():
     table_window = ctk.CTkToplevel(app)
     table_window.title("Choose Table")
-    table_window.geometry("300x400")
+    table_window.geometry("350x400")
     table_window.resizable(False, False)
 
     def table_selected(table_number):
@@ -28,20 +32,29 @@ def choose_table():
         table_entry.delete(0, tk.END)
         table_entry.insert(0, f"Table {table_number}")
         table_entry.configure(state='readonly')
+        occupied_tables.add(table_number)
         table_window.destroy()
 
     ctk.CTkLabel(table_window, text="Select a Table:", font=("Arial", 16)).pack(pady=10)
+    
+    table_frame = ctk.CTkFrame(table_window)
+    table_frame.pack(pady=5, padx=5, fill='both', expand=True)
 
-    for i in range(20):
-        ctk.CTkButton(table_window, text=f"Table {i+1}", command=lambda i=i: table_selected(i+1),
-                      height=30, border_width=2, corner_radius=10).pack(pady=5, padx=10, fill='x')
+    for row in range(5):
+        row_frame = ctk.CTkFrame(table_frame)
+        row_frame.pack(fill='x')
+        for col in range(4):
+            table_number = row * 4 + col + 1
+            button_state = "normal" if table_number not in occupied_tables else "disabled"
+            ctk.CTkButton(row_frame, text=f"Table {table_number}", command=lambda tn=table_number: table_selected(tn),
+                          state=button_state, height=30, border_width=2, corner_radius=10).pack(side='left', padx=5, pady=5)
 
 def submit_reservation():
     name = name_entry.get()
     phone = phone_entry.get()
     seats = seats_entry.get()
     date = f"{int(day_combobox.get()):02d}-{int(month_combobox.get()):02d}-{year_combobox.get()}"
-    time = time_entry.get()
+    time = f"{hour_combobox.get()}:{minute_combobox.get()}"
     table = table_entry.get()
 
     if not name or not phone or not seats or not date or not time or not table:
@@ -93,7 +106,7 @@ def show_payment_page(name, phone, seats, date, time, table):
             options = []
 
         for option in options:
-            ctk.CTkButton(payment_options_frame, text=option, command=lambda opt=option: show_account_form(opt),
+            ctk.CTkButton(payment_options_frame, text=option, command=lambda opt=option: show_account_form(opt, name, phone, seats, date, time, table, method),
                           height=30, border_width=2, corner_radius=10).pack(anchor='center', padx=20, pady=5)
 
     for method in payment_methods:
@@ -108,7 +121,7 @@ def show_payment_page(name, phone, seats, date, time, table):
 
     frame.pack(fill='both', expand=True)
 
-def show_account_form(option):
+def show_account_form(option, name, phone, seats, date, time, table, payment_method):
     for widget in frame.winfo_children():
         widget.destroy()
 
@@ -127,84 +140,122 @@ def show_account_form(option):
         if not name_account or not account_number:
             messagebox.showwarning("Input Error", "All fields are required!")
             return
-        show_success_page()
+        create_ticket_page(name, phone, seats, date, time, table, payment_method, name_account, account_number)
 
-    submit_button = ctk.CTkButton(frame, text="Submit", command=submit_payment, height=30, border_width=2, corner_radius=10)
+    submit_button = ctk.CTkButton(frame, text="Print e-Ticket", command=submit_payment, height=30, border_width=2, corner_radius=10)
     submit_button.pack(padx=10, pady=20)
 
-    back_button = ctk.CTkButton(frame, text="Back", command=show_payment_page, height=30, border_width=2, corner_radius=10)
+    back_button = ctk.CTkButton(frame, text="Back", command=lambda: show_payment_page(name, phone, seats, date, time, table), height=30, border_width=2, corner_radius=10)
     back_button.pack(padx=10, pady=20, side='bottom')
 
     frame.pack(fill='both', expand=True)
 
-def show_success_page():
-    for widget in frame.winfo_children():
-        widget.destroy()
+def create_ticket_page(name, phone, seats, date, time, table, payment_method, name_account, account_number):
+    ticket_details = (f"--- E-Ticket ---\n\n"
+                      f"Name: {name}\n"
+                      f"Phone: {phone}\n"
+                      f"Number of Seats: {seats}\n"
+                      f"Date: {date}\n"
+                      f"Time: {time}\n"
+                      f"Table: {table}\n"
+                      f"Payment Method: {payment_method}\n"
+                      f"Account Name: {name_account}\n"
+                      f"Account Number: {account_number}")
 
-    reservation_details = (f"Name: {name_entry.get()}\n"
-                           f"Phone: {phone_entry.get()}\n"
-                           f"Number of Seats: {seats_entry.get()}\n"
-                           f"Date: {int(day_combobox.get()):02d}-{int(month_combobox.get()):02d}-{year_combobox.get()}\n"
-                           f"Time: {time_entry.get()}\n"
-                           f"Table: {table_entry.get()}")
+    html_content = f"""
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>e-Ticket</title>
+        <style>
+            body {{
+                font-family: Arial, sans-serif;
+                text-align: center;
+                padding: 20px;
+            }}
+            .ticket {{
+                border: 1px solid #000;
+                padding: 20px;
+                border-radius: 10px;
+            }}
+            h2 {{
+                margin-top: 0;
+            }}
+        </style>
+    </head>
+    <body>
+        <div class="ticket">
+            <h2>Restaurant e-Ticket</h2>
+            <p><strong>Name:</strong> {name}</p>
+            <p><strong>Phone:</strong> {phone}</p>
+            <p><strong>Number of Seats:</strong> {seats}</p>
+            <p><strong>Date:</strong> {date}</p>
+            <p><strong>Time:</strong> {time}</p>
+            <p><strong>Table:</strong> {table}</p>
+            <p><strong>Payment Method:</strong> {payment_method}</p>
+            <p><strong>Account Name:</strong> {name_account}</p>
+            <p><strong>Account Number:</strong> {account_number}</p>
+        </div>
+    </body>
+    </html>
+    """
 
-    details_frame = ctk.CTkFrame(frame, corner_radius=10)
-    details_frame.pack(padx=10, pady=5, fill='x', expand=True)
+    file_path = os.path.join(os.getcwd(), "e_ticket.html")
+    with open(file_path, 'w') as file:
+        file.write(html_content)
 
-    ctk.CTkLabel(details_frame, text="Reservation Details", font=("Arial", 14, "bold")).pack(padx=10, pady=5)
-    ctk.CTkLabel(details_frame, text=reservation_details, justify='left').pack(padx=10, pady=5)
-
-    ctk.CTkLabel(frame, text="Reservasi Anda Berhasil", font=("Arial", 20, "bold")).pack(padx=10, pady=20)
-
-    frame.pack(fill='both', expand=True)
+    webbrowser.open(f"file://{file_path}")
 
 def show_reservation_page():
     for widget in frame.winfo_children():
         widget.destroy()
 
-    ctk.CTkLabel(frame, text="Nama Lengkap", font=("Arial", 14)).pack(padx=10, pady=5)
-    global name_entry
+    global name_entry, phone_entry, seats_entry, day_combobox, month_combobox, year_combobox, hour_combobox, minute_combobox, table_entry
+
+    ctk.CTkLabel(frame, text="Make a Reservation", font=("Arial", 20)).pack(padx=10, pady=20)
+
     name_entry = add_entry(frame)
+    name_entry.insert(0, "Name")
 
-    ctk.CTkLabel(frame, text="Nomor Handphone", font=("Arial", 14)).pack(padx=10, pady=5)
-    global phone_entry
     phone_entry = add_entry(frame)
+    phone_entry.insert(0, "Phone Number")
 
-    ctk.CTkLabel(frame, text="Jumlah kursi", font=("Arial", 14)).pack(padx=10, pady=5)
-    global seats_entry
     seats_entry = add_entry(frame)
+    seats_entry.insert(0, "Number of Seats")
 
-    ctk.CTkLabel(frame, text="Tanggal Pemesanan", font=("Arial", 14)).pack(padx=10, pady=5)
-    date_frame = ctk.CTkFrame(frame, corner_radius=10)
+    ctk.CTkLabel(frame, text="Date").pack(padx=10, pady=5)
+    date_frame = ctk.CTkFrame(frame)
     date_frame.pack(pady=5)
-    days = [str(day) for day in range(1, 32)]
-    months = [str(month) for month in range(1, 13)]
-    years = [str(year) for year in range(2023, 2031)]
+    
+    day_combobox = ctk.CTkComboBox(date_frame, values=[str(i).zfill(2) for i in range(1, 32)], width=50)
+    day_combobox.pack(side='left', padx=2)
+    month_combobox = ctk.CTkComboBox(date_frame, values=[str(i).zfill(2) for i in range(1, 13)], width=50)
+    month_combobox.pack(side='left', padx=2)
+    year_combobox = ctk.CTkComboBox(date_frame, values=[str(i) for i in range(2023, 2030)], width=60)
+    year_combobox.pack(side='left', padx=2)
 
-    global day_combobox, month_combobox, year_combobox
-    day_combobox = ctk.CTkComboBox(date_frame, values=days, width=50)
-    day_combobox.pack(side='left', padx=5)
-    month_combobox = ctk.CTkComboBox(date_frame, values=months, width=50)
-    month_combobox.pack(side='left', padx=5)
-    year_combobox = ctk.CTkComboBox(date_frame, values=years, width=70)
-    year_combobox.pack(side='left', padx=5)
+    ctk.CTkLabel(frame, text="Time").pack(padx=10, pady=5)
+    time_frame = ctk.CTkFrame(frame)
+    time_frame.pack(pady=5)
+    
+    hour_combobox = ctk.CTkComboBox(time_frame, values=[str(i).zfill(2) for i in range(0, 24)], width=50)
+    hour_combobox.pack(side='left', padx=2)
+    minute_combobox = ctk.CTkComboBox(time_frame, values=[str(i).zfill(2) for i in range(0, 60)], width=50)
+    minute_combobox.pack(side='left', padx=2)
 
-    ctk.CTkLabel(frame, text="Waktu Pemesanan (HH:MM)", font=("Arial", 14)).pack(padx=10, pady=5)
-    global time_entry
-    time_entry = add_entry(frame)
+    table_entry = add_entry(frame)
+    table_entry.insert(0, "Table")
+    table_entry.configure(state='readonly')
+    choose_table_button = ctk.CTkButton(frame, text="Choose Table", command=choose_table, height=30, border_width=2, corner_radius=10)
+    choose_table_button.pack(pady=5)
 
-    ctk.CTkLabel(frame, text="Pilih Meja", font=("Arial", 14)).pack(padx=10, pady=5)
-    global table_entry
-    table_entry = ctk.CTkEntry(frame, state='readonly', height=30, border_width=2, corner_radius=10)
-    table_entry.pack(padx=10, pady=5, fill='x')
-
-    choose_table_button = ctk.CTkButton(frame, text="Pilih Meja", command=choose_table, height=30, border_width=2, corner_radius=10)
-    choose_table_button.pack(padx=10, pady=5)
-
-    submit_button = ctk.CTkButton(frame, text="Submit", command=submit_reservation, height=30, border_width=2, corner_radius=10)
-    submit_button.pack(padx=10, pady=20)
+    submit_button = ctk.CTkButton(frame, text="Submit Reservation", command=submit_reservation, height=30, border_width=2, corner_radius=10)
+    submit_button.pack(pady=20)
 
     frame.pack(fill='both', expand=True)
 
 show_reservation_page()
+
 app.mainloop()
