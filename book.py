@@ -46,9 +46,14 @@ def halaman_utama():
         order_button.place(x=200, y=15)
 
     def on_label_click_resto2():
+<<<<<<< HEAD
         window3.destroy()
         # Buat halaman baru untuk restoran Kopi Jahat
         window_resto2 = tk.Tk()
+=======
+        # Buat halaman baru untuk restoran Bento Kopi
+        window_resto2 = tk.Toplevel(window3)
+>>>>>>> de1c0f24f6e1ed6278fac01bbdc0daa9190e28fd
         window_resto2.title("Bento Kopi")
         window_resto2.geometry("1280x720")
         window_resto2.configure(bg="black")
@@ -151,9 +156,14 @@ def halaman_utama():
         order_button.place(x=200, y=15)
 
     def on_label_click_resto5():
+<<<<<<< HEAD
         window3.destroy()
         # Buat halaman baru untuk restoran Cold 'N Brew
         window_resto5 = tk.Tk()
+=======
+        # Buat halaman baru untuk restoran Bukuku Lawas
+        window_resto5 = tk.Toplevel(window3)
+>>>>>>> de1c0f24f6e1ed6278fac01bbdc0daa9190e28fd
         window_resto5.title("Bukuku Lawas")
         window_resto5.geometry("1280x720")
         window_resto5.configure(bg="black")
@@ -184,9 +194,14 @@ def halaman_utama():
         order_button.place(x=200, y=15)
 
     def on_label_click_resto6():
+<<<<<<< HEAD
         window3.destroy()
         # Buat halaman baru untuk restoran Cold 'N Brew
         window_resto6 = tk.Tk()
+=======
+        # Buat halaman baru untuk restoran Almamater
+        window_resto6 = tk.Toplevel(window3)
+>>>>>>> de1c0f24f6e1ed6278fac01bbdc0daa9190e28fd
         window_resto6.title("Almamater Coffee & Eatery")
         window_resto6.geometry("1280x720")
         window_resto6.configure(bg="black")
@@ -217,9 +232,14 @@ def halaman_utama():
         order_button.place(x=200, y=15)
     
     def on_label_click_resto7():
+<<<<<<< HEAD
         window3.destroy()
         # Buat halaman baru untuk restoran Cold 'N Brew
         window_resto7 = tk.Tk()
+=======
+        # Buat halaman baru untuk restoran Kopi Konnichiwa
+        window_resto7 = tk.Toplevel(window3)
+>>>>>>> de1c0f24f6e1ed6278fac01bbdc0daa9190e28fd
         window_resto7.title("Kopi Konnichiwa")
         window_resto7.geometry("1280x720")
         window_resto7.configure(bg="black")
@@ -250,9 +270,14 @@ def halaman_utama():
         order_button.place(x=200, y=15)
 
     def on_label_click_resto8():
+<<<<<<< HEAD
         window3.destroy()
         # Buat halaman baru untuk restoran Cold 'N Brew
         window_resto8 = tk.Tk()
+=======
+        # Buat halaman baru untuk restoran Natahati Kopi
+        window_resto8 = tk.Toplevel(window3)
+>>>>>>> de1c0f24f6e1ed6278fac01bbdc0daa9190e28fd
         window_resto8.title("Natahati Kopi")
         window_resto8.geometry("1280x720")
         window_resto8.configure(bg="black")
