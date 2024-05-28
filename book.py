@@ -15,7 +15,7 @@ def halaman_utama():
         window_resto1.configure(bg="black")
         window_resto1.resizable(True, True)
 
-        img_bg = Image.open("D:/kl13/Kelompok-13/menutruntum.png")
+        img_bg = Image.open("Kelompok-13/menutruntum.png")
         img_bg = img_bg.resize((1280, 720))
         bg_image = ImageTk.PhotoImage(img_bg)
         bg_label = tk.Label(window_resto1, image=bg_image)
@@ -23,7 +23,7 @@ def halaman_utama():
         bg_label.place(x=0, y=0, relwidth=1, relheight=1)
 
     def on_label_click_resto2():
-        # Buat halaman baru untuk restoran Kopi Jahat
+        # Buat halaman baru untuk restoran Bento Kopi
         window_resto2 = tk.Toplevel(window3)
         window_resto2.title("Bento Kopi")
         window_resto2.geometry("1280x720")
@@ -31,7 +31,7 @@ def halaman_utama():
         window_resto2.resizable(True, True)
 
         # Menambahkan gambar background
-        img_bg = Image.open("D:/kl13/Kelompok-13/menubento.png")
+        img_bg = Image.open("Kelompok-13/menubento.png")
         img_bg = img_bg.resize((1280, 720))
         bg_image = ImageTk.PhotoImage(img_bg)
         bg_label = tk.Label(window_resto2, image=bg_image)
@@ -48,7 +48,7 @@ def halaman_utama():
         window_resto3.resizable(True, True)
 
         # Menambahkan gambar background
-        img_bg = Image.open("D:/kl13/Kelompok-13/menubrew.png")
+        img_bg = Image.open("Kelompok-13/menubrew.png")
         img_bg = img_bg.resize((1280,720))
         bg_image = ImageTk.PhotoImage(img_bg)
         bg_label = tk.Label(window_resto3, image=bg_image, bd=0, highlightthickness=0)
@@ -67,7 +67,7 @@ def halaman_utama():
         window_resto4.configure(bg="black")
         window_resto4.resizable(True, True)
 
-        img_bg = Image.open("D:/kl13/Kelompok-13/menulaluna.png")
+        img_bg = Image.open("Kelompok-13/menulaluna.png")
         img_bg = img_bg.resize((1280, 720))
         bg_image = ImageTk.PhotoImage(img_bg)
         bg_label = tk.Label(window_resto4, image=bg_image)
@@ -75,14 +75,14 @@ def halaman_utama():
         bg_label.place(x=0, y=0, relwidth=1, relheight=1)
 
     def on_label_click_resto5():
-        # Buat halaman baru untuk restoran Cold 'N Brew
+        # Buat halaman baru untuk restoran Bukuku Lawas
         window_resto5 = tk.Toplevel(window3)
         window_resto5.title("Bukuku Lawas")
         window_resto5.geometry("1280x720")
         window_resto5.configure(bg="black")
         window_resto5.resizable(True, True)
 
-        img_bg = Image.open("D:/kl13/Kelompok-13/menubukuku.png")
+        img_bg = Image.open("Kelompok-13/menubukuku.png")
         img_bg = img_bg.resize((1280, 720))
         bg_image = ImageTk.PhotoImage(img_bg)
         bg_label = tk.Label(window_resto5, image=bg_image)
@@ -90,14 +90,14 @@ def halaman_utama():
         bg_label.place(x=0, y=0, relwidth=1, relheight=1)
 
     def on_label_click_resto6():
-        # Buat halaman baru untuk restoran Cold 'N Brew
+        # Buat halaman baru untuk restoran Almamater
         window_resto6 = tk.Toplevel(window3)
         window_resto6.title("Almamater Coffee & Eatery")
         window_resto6.geometry("1280x720")
         window_resto6.configure(bg="black")
         window_resto6.resizable(True, True)
 
-        img_bg = Image.open("D:/kl13/Kelompok-13/menualmamater.png")
+        img_bg = Image.open("Kelompok-13/menualmamater.png")
         img_bg = img_bg.resize((1280, 720))
         bg_image = ImageTk.PhotoImage(img_bg)
         bg_label = tk.Label(window_resto6, image=bg_image)
@@ -105,14 +105,14 @@ def halaman_utama():
         bg_label.place(x=0, y=0, relwidth=1, relheight=1)
     
     def on_label_click_resto7():
-        # Buat halaman baru untuk restoran Cold 'N Brew
+        # Buat halaman baru untuk restoran Kopi Konnichiwa
         window_resto7 = tk.Toplevel(window3)
         window_resto7.title("Kopi Konnichiwa")
         window_resto7.geometry("1280x720")
         window_resto7.configure(bg="black")
         window_resto7.resizable(True, True)
 
-        img_bg = Image.open("D:/kl13/Kelompok-13/menu.png")
+        img_bg = Image.open("Kelompok-13/menu.png")
         img_bg = img_bg.resize((1280, 720))
         bg_image = ImageTk.PhotoImage(img_bg)
         bg_label = tk.Label(window_resto7, image=bg_image)
@@ -120,14 +120,14 @@ def halaman_utama():
         bg_label.place(x=0, y=0, relwidth=1, relheight=1)
 
     def on_label_click_resto8():
-        # Buat halaman baru untuk restoran Cold 'N Brew
+        # Buat halaman baru untuk restoran Natahati Kopi
         window_resto8 = tk.Toplevel(window3)
         window_resto8.title("Natahati Kopi")
         window_resto8.geometry("1280x720")
         window_resto8.configure(bg="black")
         window_resto8.resizable(True, True)
 
-        img_bg = Image.open("D:/kl13/Kelompok-13/menunatahati.png")
+        img_bg = Image.open("Kelompok-13/menunatahati.png")
         img_bg = img_bg.resize((1280, 720))
         bg_image = ImageTk.PhotoImage(img_bg)
         bg_label = tk.Label(window_resto8, image=bg_image)
