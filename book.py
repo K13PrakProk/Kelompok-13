@@ -3,52 +3,93 @@ import tkinter as tk
 from tkinter import messagebox
 from PIL import Image, ImageTk
 import customtkinter as ctk
+import tkinter as tk
+from tkinter import messagebox
+import webbrowser
+import os
+import halaman_reservasi
 
 
 
 def halaman_utama():
     def on_label_click_resto1():
+        window3.destroy()
         # Buat halaman baru untuk restoran Truntum
-        window_resto1 = tk.Toplevel(window3)
+        window_resto1 = tk.Tk()
         window_resto1.title("Truntum")
         window_resto1.geometry("1280x1720")
         window_resto1.configure(bg="black")
         window_resto1.resizable(True, True)
 
-        img_bg = Image.open("D:/kl13/Kelompok-13/menutruntum.png")
+        img_bg = Image.open("Kelompok-13/menutruntum.png")
         img_bg = img_bg.resize((1280, 720))
         bg_image = ImageTk.PhotoImage(img_bg)
         bg_label = tk.Label(window_resto1, image=bg_image)
         bg_label.image = bg_image
         bg_label.place(x=0, y=0, relwidth=1, relheight=1)
 
+        frame1 = Frame(window_resto1, width=300, height=70, bg="black")
+        frame1.place(x=490, y=610)
+
+        def back_to_previous():
+            window_resto1.destroy()
+            halaman_utama()
+
+        back_button = tk.Button(frame1, text="Back", command=back_to_previous, fg="black", bg="orange", font=("Arial", 14, "bold"))
+        back_button.place(x=35, y=15)
+
+        def proceed_to_order():
+            window_resto1.destroy()
+            halaman_reservasi.halaman_order()
+
+        order_button = tk.Button(frame1, text="Order", command=proceed_to_order, fg="black", bg="orange", font=("Arial", 14, "bold"))
+        order_button.place(x=200, y=15)
+
     def on_label_click_resto2():
+        window3.destroy()
         # Buat halaman baru untuk restoran Kopi Jahat
-        window_resto2 = tk.Toplevel(window3)
+        window_resto2 = tk.Tk()
         window_resto2.title("Bento Kopi")
         window_resto2.geometry("1280x720")
         window_resto2.configure(bg="black")
         window_resto2.resizable(True, True)
 
         # Menambahkan gambar background
-        img_bg = Image.open("D:/kl13/Kelompok-13/menubento.png")
+        img_bg = Image.open("Kelompok-13/menubento.png")
         img_bg = img_bg.resize((1280, 720))
         bg_image = ImageTk.PhotoImage(img_bg)
         bg_label = tk.Label(window_resto2, image=bg_image)
         bg_label.image = bg_image
         bg_label.place(x=0, y=0, relwidth=1, relheight=1)
-        
+
+        frame1 = Frame(window_resto2, width=300, height=70, bg="black")
+        frame1.place(x=490, y=610)
+
+        def back_to_previous():
+            window_resto2.destroy()
+            halaman_utama()
+
+        back_button = tk.Button(frame1, text="Back", command=back_to_previous, fg="black", bg="orange", font=("Arial", 14, "bold"))
+        back_button.place(x=35, y=15)
+
+        def proceed_to_order():
+            window_resto2.destroy()
+            halaman_reservasi.halaman_order()
+
+        order_button = tk.Button(frame1, text="Order", command=proceed_to_order, fg="black", bg="orange", font=("Arial", 14, "bold"))
+        order_button.place(x=200, y=15)
 
     def on_label_click_resto3():
+        window3.destroy()
         # Buat halaman baru untuk restoran Cold 'N Brew
-        window_resto3 = tk.Toplevel(window3)
+        window_resto3 = tk.Tk()
         window_resto3.title("Cold 'N Brew")
         window_resto3.geometry("1280x720")
         window_resto3.configure(bg="black")
         window_resto3.resizable(True, True)
 
         # Menambahkan gambar background
-        img_bg = Image.open("D:/kl13/Kelompok-13/menubrew.png")
+        img_bg = Image.open("Kelompok-13/menubrew.png")
         img_bg = img_bg.resize((1280,720))
         bg_image = ImageTk.PhotoImage(img_bg)
         bg_label = tk.Label(window_resto3, image=bg_image, bd=0, highlightthickness=0)
@@ -58,81 +99,188 @@ def halaman_utama():
         label = tk.Label(window_resto3, text="DAFTAR MENU", fg="white", bg="black", font=("Helvetica", 22, "bold"))
         label.place(x=200, y=190)
 
+        frame1 = Frame(window_resto3, width=300, height=70, bg="black")
+        frame1.place(x=490, y=610)
+
+        def back_to_previous():
+            window_resto3.destroy()
+            halaman_utama()
+
+        back_button = tk.Button(frame1, text="Back", command=back_to_previous, fg="black", bg="orange", font=("Arial", 14, "bold"))
+        back_button.place(x=35, y=15)
+
+        def proceed_to_order():
+            window_resto3.destroy()
+            halaman_reservasi.halaman_order()
+
+        order_button = tk.Button(frame1, text="Order", command=proceed_to_order, fg="black", bg="orange", font=("Arial", 14, "bold"))
+        order_button.place(x=200, y=15)
+
 
     def on_label_click_resto4():
+        window3.destroy()
         # Buat halaman baru untuk restoran Cold 'N Brew
-        window_resto4 = tk.Toplevel(window3)
+        window_resto4 = tk.Tk()
         window_resto4.title("La Luna Coffee & Eatery")
         window_resto4.geometry("1280x720")
         window_resto4.configure(bg="black")
         window_resto4.resizable(True, True)
 
-        img_bg = Image.open("D:/kl13/Kelompok-13/menulaluna.png")
+        img_bg = Image.open("Kelompok-13/menulaluna.png")
         img_bg = img_bg.resize((1280, 720))
         bg_image = ImageTk.PhotoImage(img_bg)
         bg_label = tk.Label(window_resto4, image=bg_image)
         bg_label.image = bg_image
         bg_label.place(x=0, y=0, relwidth=1, relheight=1)
 
+        frame1 = Frame(window_resto4, width=300, height=70, bg="black")
+        frame1.place(x=490, y=610)
+
+        def back_to_previous():
+            window_resto4.destroy()
+            halaman_utama()
+
+        back_button = tk.Button(frame1, text="Back", command=back_to_previous, fg="black", bg="orange", font=("Arial", 14, "bold"))
+        back_button.place(x=35, y=15)
+
+        def proceed_to_order():
+            window_resto4.destroy()
+            halaman_reservasi.halaman_order()
+
+        order_button = tk.Button(frame1, text="Order", command=proceed_to_order, fg="black", bg="orange", font=("Arial", 14, "bold"))
+        order_button.place(x=200, y=15)
+
     def on_label_click_resto5():
+        window3.destroy()
         # Buat halaman baru untuk restoran Cold 'N Brew
-        window_resto5 = tk.Toplevel(window3)
+        window_resto5 = tk.Tk()
         window_resto5.title("Bukuku Lawas")
         window_resto5.geometry("1280x720")
         window_resto5.configure(bg="black")
         window_resto5.resizable(True, True)
 
-        img_bg = Image.open("D:/kl13/Kelompok-13/menubukuku.png")
+        img_bg = Image.open("Kelompok-13/menubukuku.png")
         img_bg = img_bg.resize((1280, 720))
         bg_image = ImageTk.PhotoImage(img_bg)
         bg_label = tk.Label(window_resto5, image=bg_image)
         bg_label.image = bg_image
         bg_label.place(x=0, y=0, relwidth=1, relheight=1)
 
+        frame1 = Frame(window_resto5, width=300, height=70, bg="black")
+        frame1.place(x=490, y=610)
+
+        def back_to_previous():
+            window_resto5.destroy()
+            halaman_utama()
+
+        back_button = tk.Button(frame1, text="Back", command=back_to_previous, fg="black", bg="orange", font=("Arial", 14, "bold"))
+        back_button.place(x=35, y=15)
+
+        def proceed_to_order():
+            window_resto5.destroy()
+            halaman_reservasi.halaman_order()
+
+        order_button = tk.Button(frame1, text="Order", command=proceed_to_order, fg="black", bg="orange", font=("Arial", 14, "bold"))
+        order_button.place(x=200, y=15)
+
     def on_label_click_resto6():
+        window3.destroy()
         # Buat halaman baru untuk restoran Cold 'N Brew
-        window_resto6 = tk.Toplevel(window3)
+        window_resto6 = tk.Tk()
         window_resto6.title("Almamater Coffee & Eatery")
         window_resto6.geometry("1280x720")
         window_resto6.configure(bg="black")
         window_resto6.resizable(True, True)
 
-        img_bg = Image.open("D:/kl13/Kelompok-13/menualmamater.png")
+        img_bg = Image.open("Kelompok-13/menualmamater.png")
         img_bg = img_bg.resize((1280, 720))
         bg_image = ImageTk.PhotoImage(img_bg)
         bg_label = tk.Label(window_resto6, image=bg_image)
         bg_label.image = bg_image
         bg_label.place(x=0, y=0, relwidth=1, relheight=1)
+
+        frame1 = Frame(window_resto6, width=300, height=70, bg="black")
+        frame1.place(x=490, y=610)
+
+        def back_to_previous():
+            window_resto6.destroy()
+            halaman_utama()
+
+        back_button = tk.Button(frame1, text="Back", command=back_to_previous, fg="black", bg="orange", font=("Arial", 14, "bold"))
+        back_button.place(x=35, y=15)
+
+        def proceed_to_order():
+            window_resto6.destroy()
+            halaman_reservasi.halaman_order()
+
+        order_button = tk.Button(frame1, text="Order", command=proceed_to_order, fg="black", bg="orange", font=("Arial", 14, "bold"))
+        order_button.place(x=200, y=15)
     
     def on_label_click_resto7():
+        window3.destroy()
         # Buat halaman baru untuk restoran Cold 'N Brew
-        window_resto7 = tk.Toplevel(window3)
+        window_resto7 = tk.Tk()
         window_resto7.title("Kopi Konnichiwa")
         window_resto7.geometry("1280x720")
         window_resto7.configure(bg="black")
         window_resto7.resizable(True, True)
 
-        img_bg = Image.open("D:/kl13/Kelompok-13/menu.png")
+        img_bg = Image.open("Kelompok-13/menu.png")
         img_bg = img_bg.resize((1280, 720))
         bg_image = ImageTk.PhotoImage(img_bg)
         bg_label = tk.Label(window_resto7, image=bg_image)
         bg_label.image = bg_image
         bg_label.place(x=0, y=0, relwidth=1, relheight=1)
 
+        frame1 = Frame(window_resto7, width=300, height=70, bg="black")
+        frame1.place(x=490, y=610)
+
+        def back_to_previous():
+            window_resto7.destroy()
+            halaman_utama()
+
+        back_button = tk.Button(frame1, text="Back", command=back_to_previous, fg="black", bg="orange", font=("Arial", 14, "bold"))
+        back_button.place(x=35, y=15)
+
+        def proceed_to_order():
+            window_resto7.destroy()
+            halaman_reservasi.halaman_order()
+
+        order_button = tk.Button(frame1, text="Order", command=proceed_to_order, fg="black", bg="orange", font=("Arial", 14, "bold"))
+        order_button.place(x=200, y=15)
+
     def on_label_click_resto8():
+        window3.destroy()
         # Buat halaman baru untuk restoran Cold 'N Brew
-        window_resto8 = tk.Toplevel(window3)
+        window_resto8 = tk.Tk()
         window_resto8.title("Natahati Kopi")
         window_resto8.geometry("1280x720")
         window_resto8.configure(bg="black")
         window_resto8.resizable(True, True)
 
-        img_bg = Image.open("D:/kl13/Kelompok-13/menunatahati.png")
+        img_bg = Image.open("Kelompok-13/menunatahati.png")
         img_bg = img_bg.resize((1280, 720))
         bg_image = ImageTk.PhotoImage(img_bg)
         bg_label = tk.Label(window_resto8, image=bg_image)
         bg_label.image = bg_image
         bg_label.place(x=0, y=0, relwidth=1, relheight=1)
+
+        frame1 = Frame(window_resto8, width=300, height=70, bg="black")
+        frame1.place(x=490, y=610)
+
+        def back_to_previous():
+            window_resto8.destroy()
+            halaman_utama()
+
+        back_button = tk.Button(frame1, text="Back", command=back_to_previous, fg="black", bg="orange", font=("Arial", 14, "bold"))
+        back_button.place(x=35, y=15)
+
+        def proceed_to_order():
+            window_resto8.destroy()
+            halaman_reservasi.halaman_order()
+
+        order_button = tk.Button(frame1, text="Order", command=proceed_to_order, fg="black", bg="orange", font=("Arial", 14, "bold"))
+        order_button.place(x=200, y=15)
 
     # window1.destroy()
     window3 = tk.Tk()
@@ -753,8 +901,9 @@ def halaman_utama():
     text.config(state=DISABLED)  # Menonaktifkan edit
     text.place(x=185, y=110)
 
-
     window3.mainloop()
+
+
 
 # Panggil fungsi untuk menampilkan halaman utama
 halaman_utama()
