@@ -41,9 +41,7 @@ def halaman_utama():
         order_button.place(x=200, y=15)
 
     def on_label_click_resto2():
-        window3.destroy()
-        window_resto2 = tk.Tk()
-        # Buat halaman baru untuk restoran Bento Kopi
+        window3.withdraw()
         window_resto2 = tk.Toplevel(window3)
         window_resto2.title("Bento Kopi")
         window_resto2.geometry("1280x720")
@@ -70,7 +68,7 @@ def halaman_utama():
 
         def proceed_to_order():
             window_resto2.destroy()
-            halaman_reservasi.halaman_order()
+            halaman_order()
 
         order_button = tk.Button(frame1, text="Order", command=proceed_to_order, fg="black", bg="orange", font=("Arial", 14, "bold"))
         order_button.place(x=200, y=15)
@@ -90,13 +88,10 @@ def halaman_utama():
         bg_image = ImageTk.PhotoImage(img_bg)
         bg_label = tk.Label(window_resto3, image=bg_image, bd=0, highlightthickness=0)
         bg_label.image = bg_image
-        bg_label.place(x=0, y=-110)
-
-        label = tk.Label(window_resto3, text="DAFTAR MENU", fg="white", bg="black", font=("Helvetica", 22, "bold"))
-        label.place(x=200, y=190)
+        bg_label.place(x=0, y=0)
 
         frame1 = Frame(window_resto3, width=300, height=70, bg="black")
-        frame1.place(x=490, y=510)
+        frame1.place(x=490, y=620)
 
         def back_to_previous():
             window_resto3.destroy()
@@ -383,7 +378,7 @@ def halaman_utama():
     img2 = ImageTk.PhotoImage(img2)
     label2 = tk.Label(frame2, image=img2, bd=0, highlightthickness=0)
     label2.image = img2
-    label2.place(x=197, y=30)
+    label2.place(x=202, y=30)
 
     text = Text(frame2, height=1, width=3, font=("Arial", 8), bg="white", cursor="arrow", bd=0, highlightthickness=0)
     text.insert(END, "4,2")
@@ -763,7 +758,7 @@ def halaman_utama():
     img2 = ImageTk.PhotoImage(img2)
     label2 = tk.Label(frame7, image=img2, bd=0, highlightthickness=0)
     label2.image = img2
-    label2.place(x=197, y=30)
+    label2.place(x=200, y=30)
 
     text = Text(frame7, height=1, width=3, font=("Arial", 8), bg="white", cursor="arrow", bd=0, highlightthickness=0)
     text.insert(END, "4,8")
@@ -773,7 +768,7 @@ def halaman_utama():
     text = Text(frame7, height=1, width=6, font=("Arial", 8), bg="white", cursor="arrow", bd=0, highlightthickness=0)
     text.insert(END, "(214)")
     text.config(state=DISABLED)  # Menonaktifkan edit
-    text.place(x=283, y=30)
+    text.place(x=287, y=30)
 
     text = Text(frame7, height=1, width=30, font=("Arial", 8), bg="white", cursor="arrow", bd=0, highlightthickness=0)
     text.insert(END, "Kafe • Rp 25.000-50.000")
