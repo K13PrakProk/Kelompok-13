@@ -2,12 +2,7 @@ from tkinter import *
 import tkinter as tk
 from tkinter import messagebox
 from PIL import Image, ImageTk
-import customtkinter as ctk
-import tkinter as tk
-from tkinter import messagebox
-import webbrowser
-import os
-import halaman_reservasi
+
 
 
 
@@ -46,14 +41,10 @@ def halaman_utama():
         order_button.place(x=200, y=15)
 
     def on_label_click_resto2():
-<<<<<<< HEAD
         window3.destroy()
-        # Buat halaman baru untuk restoran Kopi Jahat
         window_resto2 = tk.Tk()
-=======
         # Buat halaman baru untuk restoran Bento Kopi
         window_resto2 = tk.Toplevel(window3)
->>>>>>> de1c0f24f6e1ed6278fac01bbdc0daa9190e28fd
         window_resto2.title("Bento Kopi")
         window_resto2.geometry("1280x720")
         window_resto2.configure(bg="black")
@@ -105,7 +96,7 @@ def halaman_utama():
         label.place(x=200, y=190)
 
         frame1 = Frame(window_resto3, width=300, height=70, bg="black")
-        frame1.place(x=490, y=610)
+        frame1.place(x=490, y=510)
 
         def back_to_previous():
             window_resto3.destroy()
@@ -139,7 +130,7 @@ def halaman_utama():
         bg_label.place(x=0, y=0, relwidth=1, relheight=1)
 
         frame1 = Frame(window_resto4, width=300, height=70, bg="black")
-        frame1.place(x=490, y=610)
+        frame1.place(x=490, y=600)
 
         def back_to_previous():
             window_resto4.destroy()
@@ -156,14 +147,8 @@ def halaman_utama():
         order_button.place(x=200, y=15)
 
     def on_label_click_resto5():
-<<<<<<< HEAD
         window3.destroy()
-        # Buat halaman baru untuk restoran Cold 'N Brew
         window_resto5 = tk.Tk()
-=======
-        # Buat halaman baru untuk restoran Bukuku Lawas
-        window_resto5 = tk.Toplevel(window3)
->>>>>>> de1c0f24f6e1ed6278fac01bbdc0daa9190e28fd
         window_resto5.title("Bukuku Lawas")
         window_resto5.geometry("1280x720")
         window_resto5.configure(bg="black")
@@ -194,14 +179,8 @@ def halaman_utama():
         order_button.place(x=200, y=15)
 
     def on_label_click_resto6():
-<<<<<<< HEAD
         window3.destroy()
-        # Buat halaman baru untuk restoran Cold 'N Brew
         window_resto6 = tk.Tk()
-=======
-        # Buat halaman baru untuk restoran Almamater
-        window_resto6 = tk.Toplevel(window3)
->>>>>>> de1c0f24f6e1ed6278fac01bbdc0daa9190e28fd
         window_resto6.title("Almamater Coffee & Eatery")
         window_resto6.geometry("1280x720")
         window_resto6.configure(bg="black")
@@ -215,7 +194,7 @@ def halaman_utama():
         bg_label.place(x=0, y=0, relwidth=1, relheight=1)
 
         frame1 = Frame(window_resto6, width=300, height=70, bg="black")
-        frame1.place(x=490, y=610)
+        frame1.place(x=490, y=585)
 
         def back_to_previous():
             window_resto6.destroy()
@@ -232,14 +211,8 @@ def halaman_utama():
         order_button.place(x=200, y=15)
     
     def on_label_click_resto7():
-<<<<<<< HEAD
         window3.destroy()
-        # Buat halaman baru untuk restoran Cold 'N Brew
         window_resto7 = tk.Tk()
-=======
-        # Buat halaman baru untuk restoran Kopi Konnichiwa
-        window_resto7 = tk.Toplevel(window3)
->>>>>>> de1c0f24f6e1ed6278fac01bbdc0daa9190e28fd
         window_resto7.title("Kopi Konnichiwa")
         window_resto7.geometry("1280x720")
         window_resto7.configure(bg="black")
@@ -253,7 +226,7 @@ def halaman_utama():
         bg_label.place(x=0, y=0, relwidth=1, relheight=1)
 
         frame1 = Frame(window_resto7, width=300, height=70, bg="black")
-        frame1.place(x=490, y=610)
+        frame1.place(x=490, y=620)
 
         def back_to_previous():
             window_resto7.destroy()
@@ -270,14 +243,8 @@ def halaman_utama():
         order_button.place(x=200, y=15)
 
     def on_label_click_resto8():
-<<<<<<< HEAD
         window3.destroy()
-        # Buat halaman baru untuk restoran Cold 'N Brew
         window_resto8 = tk.Tk()
-=======
-        # Buat halaman baru untuk restoran Natahati Kopi
-        window_resto8 = tk.Toplevel(window3)
->>>>>>> de1c0f24f6e1ed6278fac01bbdc0daa9190e28fd
         window_resto8.title("Natahati Kopi")
         window_resto8.geometry("1280x720")
         window_resto8.configure(bg="black")
@@ -291,7 +258,7 @@ def halaman_utama():
         bg_label.place(x=0, y=0, relwidth=1, relheight=1)
 
         frame1 = Frame(window_resto8, width=300, height=70, bg="black")
-        frame1.place(x=490, y=610)
+        frame1.place(x=490, y=600)
 
         def back_to_previous():
             window_resto8.destroy()

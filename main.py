@@ -4,17 +4,11 @@ from tkinter import messagebox
 from PIL import Image, ImageTk
 import sqlite3
 import re
-<<<<<<< HEAD
-import halaman_reservasi
-=======
-import ctypes
-
-# Set DPI Awareness (untuk menampilkan High DPI)
-try:
-    ctypes.windll.shcore.SetProcessDpiAwareness(1)
-except:
-    pass
->>>>>>> de1c0f24f6e1ed6278fac01bbdc0daa9190e28fd
+import customtkinter as ctk
+import tkinter as tk
+from tkinter import messagebox
+import webbrowser
+import os
 
 # Membuat atau terhubung ke database
 conn = sqlite3.connect('user_data.db')
@@ -22,12 +16,12 @@ c = conn.cursor()
 
 # Membuat tabel 'users' jika belum ada
 c.execute('''CREATE TABLE IF NOT EXISTS users
-             (email TEXT PRIMARY KEY, password TEXT, full_name TEXT)''')
+             (username TEXT PRIMARY KEY, password TEXT, email TEXT)''')
 
 # Fungsi registrasi
 def update_table():
     try:
-        c.execute("ALTER TABLE users ADD COLUMN full_name TEXT")
+        c.execute("ALTER TABLE users ADD COLUMN email TEXT")
         conn.commit()
     except sqlite3.OperationalError:
         # Jika kolom sudah ada, maka akan terjadi error dan kita bisa mengabaikannya
@@ -37,43 +31,44 @@ def update_table():
 update_table()
 
 # Fungsi registrasi
-def register(email, password, full_name):
+def register(username, password, email):
     try:
         if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
             messagebox.showerror("Error", "Email tidak valid. Silakan coba lagi.")
             return
-        c.execute("INSERT INTO users (email, password, full_name) VALUES (?, ?, ?)", (email, password, full_name))
+        c.execute("INSERT INTO users (username, password, email) VALUES (?, ?, ?)", (username, password, email))
         conn.commit()
         messagebox.showinfo("Success", "Registrasi berhasil!")
         
     except sqlite3.IntegrityError:
-        messagebox.showerror("Error", "Email sudah digunakan. Silakan coba lagi.")
+        messagebox.showerror("Error", "Username sudah digunakan. Silakan coba lagi.")
 
 # Fungsi login
-def login(email, password):
-    c.execute("SELECT * FROM users WHERE email=? AND password=?", (email, password))
+def login(username, password):
+    c.execute("SELECT * FROM users WHERE username=? AND password=?", (username, password))
     if c.fetchone() is not None:
         messagebox.showinfo("Success", "Login berhasil!")
-        # Masukkan logika untuk halaman utama di sini
+        halaman_utama()
     else:
-        messagebox.showerror("Error", "Email atau password salah.")
+        messagebox.showerror("Error", "Username atau password salah.")
 
 def halaman_login():
-    global email_entry, password_entry, window1
+    global username_entry, password_entry, window1
     window1 = tk.Tk()
-    window1.title("Login")
+    window1.title("login")
     window1.geometry("1280x720")
     window1.configure(bg="black")
     window1.resizable(True, True)
+    window1.state('zoomed')
 
     heading = tk.Label(window1, text="Sign In", fg="white", bg="black", font=("Montserrat", 23, "bold"))
     heading.place(x=825, y=170)
 
-    email_label = tk.Label(window1, text="Email:", fg="white", bg="black", font=("Arial", 14))
-    email_label.place(x=750, y=220)
+    username_label = tk.Label(window1, text="Username:", fg="white", bg="black", font=("Arial", 14))
+    username_label.place(x=750, y=220)
 
-    email_entry = tk.Entry(window1, width=25, fg="white", border=4, bg="black", font=(11))
-    email_entry.place(x=750, y=250)
+    username_entry = tk.Entry(window1, width=25, fg="white", border=4, bg="black", font=(11))
+    username_entry.place(x=750, y=250)
 
     password_label = tk.Label(window1, text="Password:", fg="white", bg="black", font=("Arial", 14))
     password_label.place(x=750, y=290)
@@ -87,115 +82,98 @@ def halaman_login():
     label.image = img
     label.place(x=150, y=55)
 
-    def toggle_password_login():
-        if show_password_login.get():
-            password_entry.config(show="")
-        else:
-            password_entry.config(show="*")
-
-    show_password_login = BooleanVar()
-    show_password_checkbox_login = Checkbutton(window1, text="Show Password", variable=show_password_login, onvalue=True, offvalue=False, bg="black", fg="white", command=toggle_password_login)
-    show_password_checkbox_login.place(x=750, y=350)
-
     def halaman_register():
-        window1.withdraw()  # Sembunyikan window login
-        halaman_register_window = tk.Toplevel(window1)
-        halaman_register_window.title("Register")
-        halaman_register_window.geometry("1280x720")
-        halaman_register_window.configure(bg="black")
-        halaman_register_window.resizable(True, True)
+        window1.destroy()
+        window2 = tk.Tk()
+        window2.title("register")
+        window2.geometry("1280x720")
+        window2.configure(bg="black")
+        window2.resizable(True, True)
+        window2.state('zoomed')
 
-        heading = tk.Label(halaman_register_window, text="Sign Up", fg="white", bg="black", font=("Montserrat", 23, "bold"))
+        heading = tk.Label(window2, text="Sign Up", fg="white", bg="black", font=("Montserrat", 23, "bold"))
         heading.place(x=825, y=100)
 
-        full_name_label = tk.Label(halaman_register_window, text="Nama Lengkap:", fg="white", bg="black", font=("Arial", 14))
-        full_name_label.place(x=750, y=150)
+        new_namalengkap_label = tk.Label(window2, text="Nama Lengkap:", fg="white", bg="black", font=("Arial", 14))
+        new_namalengkap_label.place(x=750, y=150)
 
-        global full_name_entry
-        full_name_entry = tk.Entry(halaman_register_window, width=25, fg="white", border=4, bg="black", font=(11))
-        full_name_entry.place(x=750, y=180)
+        global new_namalengkap_entry
+        new_namalengkap_entry = tk.Entry(window2, width=25, fg="white", border=4, bg="black", font=(11))
+        new_namalengkap_entry.place(x=750, y=180)
 
-        email_label = tk.Label(halaman_register_window, text="Email:", fg="white", bg="black", font=("Arial", 14))
-        email_label.place(x=750, y=220)
+        new_username_label = tk.Label(window2, text="Username:", fg="white", bg="black", font=("Arial", 14))
+        new_username_label.place(x=750, y=220)
 
-        global email_entry_register
-        email_entry_register = tk.Entry(halaman_register_window, width=25, fg="white", border=4, bg="black", font=(11))
-        email_entry_register.place(x=750, y=250)
+        global new_username_entry
+        new_username_entry = tk.Entry(window2, width=25, fg="white", border=4, bg="black", font=(11))
+        new_username_entry.place(x=750, y=250)
 
-        password_label = tk.Label(halaman_register_window, text="Password:", fg="white", bg="black", font=("Arial", 14))
-        password_label.place(x=750, y=290)
+        new_password_label = tk.Label(window2, text="Password:", fg="white", bg="black", font=("Arial", 14))
+        new_password_label.place(x=750, y=290)
 
-        global password_entry_register
-        password_entry_register = tk.Entry(halaman_register_window, width=25, fg="white", border=4, bg="black", font=(11), show="*")
-        password_entry_register.place(x=750, y=320)
+        global new_password_entry
+        new_password_entry = tk.Entry(window2, width=25, fg="white", border=4, bg="black", font=(11), show="*")
+        new_password_entry.place(x=750, y=320)
 
-        def toggle_password_register():
-            if show_password_register.get():
-                password_entry_register.config(show="")
-            else:
-                password_entry_register.config(show="*")
+        new_email_label = tk.Label(window2, text="Email:", fg="white", bg="black", font=("Arial", 14))
+        new_email_label.place(x=750, y=360)
 
-        show_password_register = BooleanVar()
-        show_password_checkbox_register = Checkbutton(halaman_register_window, text="Show Password", variable=show_password_register, onvalue=True, offvalue=False, bg="black", fg="white", command=toggle_password_register)
-        show_password_checkbox_register.place(x=750, y=350)
+        global new_email_entry
+        new_email_entry = tk.Entry(window2, width=25, fg="white", border=4, bg="black", font=(11))
+        new_email_entry.place(x=750, y=390)
 
         img = Image.open("Kelompok-13/logo1.png")
         img = ImageTk.PhotoImage(img)
-        label = tk.Label(halaman_register_window, image=img, bd=0, highlightthickness=0)
+        label = tk.Label(window2, image=img, bd=0, highlightthickness=0)
         label.image = img
         label.place(x=105, y=55)
 
         def back_login():
-            halaman_register_window.destroy()
-            window1.deiconify()  # Tampilkan kembali window login saat tombol "Back" ditekan
+            window2.destroy()
+            halaman_login()
 
-        register_button = tk.Button(halaman_register_window, width=40, height=1, text="Register", fg="white", bg="black", command=process_registration)
+        register_button = tk.Button(window2, width=40, height=1, text="Register", fg="white", bg="black", command=process_registration)
         register_button.place(x=750, y=440)
 
-        back_button = tk.Button(halaman_register_window, width=40, height=1, text="Back", fg="white", bg="black", command=back_login)
+        back_button = tk.Button(window2, width=40, height=1, text="Back", fg="white", bg="black", command=back_login)
         back_button.place(x=750, y=470)
 
-    def check_login():
-        email_input = email_entry.get()
-        password_input = password_entry.get()
-        login(email_input, password_input)
+        window2.mainloop()
 
-    def toggle_password_login():
-        if show_password_login.get():
-            password_entry.config(show="")
-        else:
-            password_entry.config(show="*")
+    def check_login():
+        username_input = username_entry.get()
+        password_input = password_entry.get()
+        login(username_input, password_input)
 
     login_button = tk.Button(window1, width=40, height=1, text="Login", fg="white", bg="black", command=check_login)
     login_button.place(x=750, y=370)
 
-    def register_info_click(event):
-        halaman_register()
-
-    new_info_label = tk.Label(window1, text="Don't have any account? Please register first.", fg="white", bg="black", font=("Arial", 8), cursor="hand2")
+    new_info_label = tk.Label(window1, text="Don't have an account? Please register first.", fg="white", bg="black", font=("Arial", 8))
     new_info_label.place(x=750, y=405)
-    new_info_label.bind("<Button-1>", register_info_click)
-    new_info_label.config(font=("Arial", 8, "bold"), fg="red")
+
+    signup_button = tk.Button(window1, width=40, height=1, text="Sign Up", fg="white", bg="black", command=halaman_register)
+    signup_button.place(x=750, y=430)
 
     window1.mainloop()
 
 def process_registration():
-    new_email = email_entry_register.get()
-    new_password = password_entry_register.get()
-    new_full_name = full_name_entry.get()
-    register(new_email, new_password, new_full_name)
+    new_username = new_username_entry.get()
+    new_password = new_password_entry.get()
+    new_email = new_email_entry.get()  # Fetch email from entry field
+    register(new_username, new_password, new_email)  # Pass email to register function
 
 def halaman_utama():
     def on_label_click_resto1():
-        window3.destroy()
+        window3.withdraw()
         # Buat halaman baru untuk restoran Truntum
-        window_resto1 = tk.Tk()
+        window_resto1 = tk.Toplevel(window3)
         window_resto1.title("Truntum")
         window_resto1.geometry("1280x1720")
         window_resto1.configure(bg="black")
         window_resto1.resizable(True, True)
+        window_resto1.state('zoomed')
 
-        img_bg = Image.open("Kelompok-13/menutruntum.png")
+        img_bg = Image.open("Kelompok-13//menutruntum.png")
         img_bg = img_bg.resize((1280, 720))
         bg_image = ImageTk.PhotoImage(img_bg)
         bg_label = tk.Label(window_resto1, image=bg_image)
@@ -214,19 +192,23 @@ def halaman_utama():
 
         def proceed_to_order():
             window_resto1.destroy()
-            halaman_reservasi.halaman_order()
+            halaman_order()
 
         order_button = tk.Button(frame1, text="Order", command=proceed_to_order, fg="black", bg="orange", font=("Arial", 14, "bold"))
         order_button.place(x=200, y=15)
 
+        window_resto1.mainloop()
+
     def on_label_click_resto2():
-        window3.destroy()
-        # Buat halaman baru untuk restoran Kopi Jahat
-        window_resto2 = tk.Tk()
+        window3.withdraw()
+        window_resto2 = tk.Toplevel(window3)
+        # Buat halaman baru untuk restoran Bento Kopi
+        window_resto2 = tk.Toplevel(window3)
         window_resto2.title("Bento Kopi")
         window_resto2.geometry("1280x720")
         window_resto2.configure(bg="black")
         window_resto2.resizable(True, True)
+        window_resto2.state('zoomed')
 
         # Menambahkan gambar background
         img_bg = Image.open("Kelompok-13/menubento.png")
@@ -248,19 +230,22 @@ def halaman_utama():
 
         def proceed_to_order():
             window_resto2.destroy()
-            halaman_reservasi.halaman_order()
+            halaman_order()
 
         order_button = tk.Button(frame1, text="Order", command=proceed_to_order, fg="black", bg="orange", font=("Arial", 14, "bold"))
         order_button.place(x=200, y=15)
 
+        window_resto2.mainloop()
+
     def on_label_click_resto3():
-        window3.destroy()
+        window3.withdraw()
         # Buat halaman baru untuk restoran Cold 'N Brew
-        window_resto3 = tk.Tk()
+        window_resto3 = tk.Toplevel(window3)
         window_resto3.title("Cold 'N Brew")
         window_resto3.geometry("1280x720")
         window_resto3.configure(bg="black")
         window_resto3.resizable(True, True)
+        window_resto3.state('zoomed')
 
         # Menambahkan gambar background
         img_bg = Image.open("Kelompok-13/menubrew.png")
@@ -274,7 +259,7 @@ def halaman_utama():
         label.place(x=200, y=190)
 
         frame1 = Frame(window_resto3, width=300, height=70, bg="black")
-        frame1.place(x=490, y=610)
+        frame1.place(x=490, y=510)
 
         def back_to_previous():
             window_resto3.destroy()
@@ -285,20 +270,23 @@ def halaman_utama():
 
         def proceed_to_order():
             window_resto3.destroy()
-            halaman_reservasi.halaman_order()
+            halaman_order()
 
         order_button = tk.Button(frame1, text="Order", command=proceed_to_order, fg="black", bg="orange", font=("Arial", 14, "bold"))
         order_button.place(x=200, y=15)
 
+        window_resto3.mainloop()
+
 
     def on_label_click_resto4():
-        window3.destroy()
+        window3.withdraw()
         # Buat halaman baru untuk restoran Cold 'N Brew
-        window_resto4 = tk.Tk()
+        window_resto4 = tk.Toplevel(window3)
         window_resto4.title("La Luna Coffee & Eatery")
         window_resto4.geometry("1280x720")
         window_resto4.configure(bg="black")
         window_resto4.resizable(True, True)
+        window_resto4.state('zoomed')
 
         img_bg = Image.open("Kelompok-13/menulaluna.png")
         img_bg = img_bg.resize((1280, 720))
@@ -308,7 +296,7 @@ def halaman_utama():
         bg_label.place(x=0, y=0, relwidth=1, relheight=1)
 
         frame1 = Frame(window_resto4, width=300, height=70, bg="black")
-        frame1.place(x=490, y=610)
+        frame1.place(x=490, y=600)
 
         def back_to_previous():
             window_resto4.destroy()
@@ -319,19 +307,21 @@ def halaman_utama():
 
         def proceed_to_order():
             window_resto4.destroy()
-            halaman_reservasi.halaman_order()
+            halaman_order()
 
         order_button = tk.Button(frame1, text="Order", command=proceed_to_order, fg="black", bg="orange", font=("Arial", 14, "bold"))
         order_button.place(x=200, y=15)
 
+        window_resto4.mainloop()
+
     def on_label_click_resto5():
-        window3.destroy()
-        # Buat halaman baru untuk restoran Cold 'N Brew
-        window_resto5 = tk.Tk()
+        window3.withdraw()
+        window_resto5 = tk.Toplevel(window3)
         window_resto5.title("Bukuku Lawas")
         window_resto5.geometry("1280x720")
         window_resto5.configure(bg="black")
         window_resto5.resizable(True, True)
+        window_resto5.state('zoomed')
 
         img_bg = Image.open("Kelompok-13/menubukuku.png")
         img_bg = img_bg.resize((1280, 720))
@@ -352,19 +342,21 @@ def halaman_utama():
 
         def proceed_to_order():
             window_resto5.destroy()
-            halaman_reservasi.halaman_order()
+            halaman_order()
 
         order_button = tk.Button(frame1, text="Order", command=proceed_to_order, fg="black", bg="orange", font=("Arial", 14, "bold"))
         order_button.place(x=200, y=15)
 
+        window_resto5.mainloop()
+
     def on_label_click_resto6():
-        window3.destroy()
-        # Buat halaman baru untuk restoran Cold 'N Brew
-        window_resto6 = tk.Tk()
+        window3.withdraw()
+        window_resto6 = tk.Toplevel(window3)
         window_resto6.title("Almamater Coffee & Eatery")
         window_resto6.geometry("1280x720")
         window_resto6.configure(bg="black")
         window_resto6.resizable(True, True)
+        window_resto6.state('zoomed')
 
         img_bg = Image.open("Kelompok-13/menualmamater.png")
         img_bg = img_bg.resize((1280, 720))
@@ -374,7 +366,7 @@ def halaman_utama():
         bg_label.place(x=0, y=0, relwidth=1, relheight=1)
 
         frame1 = Frame(window_resto6, width=300, height=70, bg="black")
-        frame1.place(x=490, y=610)
+        frame1.place(x=490, y=585)
 
         def back_to_previous():
             window_resto6.destroy()
@@ -385,19 +377,21 @@ def halaman_utama():
 
         def proceed_to_order():
             window_resto6.destroy()
-            halaman_reservasi.halaman_order()
+            halaman_order()
 
         order_button = tk.Button(frame1, text="Order", command=proceed_to_order, fg="black", bg="orange", font=("Arial", 14, "bold"))
         order_button.place(x=200, y=15)
+
+        window_resto6.mainloop()
     
     def on_label_click_resto7():
-        window3.destroy()
-        # Buat halaman baru untuk restoran Cold 'N Brew
-        window_resto7 = tk.Tk()
+        window3.withdraw()
+        window_resto7 = tk.Toplevel(window3)
         window_resto7.title("Kopi Konnichiwa")
         window_resto7.geometry("1280x720")
         window_resto7.configure(bg="black")
         window_resto7.resizable(True, True)
+        window_resto7.state('zoomed')
 
         img_bg = Image.open("Kelompok-13/menu.png")
         img_bg = img_bg.resize((1280, 720))
@@ -407,7 +401,7 @@ def halaman_utama():
         bg_label.place(x=0, y=0, relwidth=1, relheight=1)
 
         frame1 = Frame(window_resto7, width=300, height=70, bg="black")
-        frame1.place(x=490, y=610)
+        frame1.place(x=490, y=620)
 
         def back_to_previous():
             window_resto7.destroy()
@@ -418,19 +412,21 @@ def halaman_utama():
 
         def proceed_to_order():
             window_resto7.destroy()
-            halaman_reservasi.halaman_order()
+            halaman_order()
 
         order_button = tk.Button(frame1, text="Order", command=proceed_to_order, fg="black", bg="orange", font=("Arial", 14, "bold"))
         order_button.place(x=200, y=15)
 
+        window_resto7.mainloop()
+
     def on_label_click_resto8():
-        window3.destroy()
-        # Buat halaman baru untuk restoran Cold 'N Brew
-        window_resto8 = tk.Tk()
+        window3.withdraw()
+        window_resto8 = tk.Toplevel(window3)
         window_resto8.title("Natahati Kopi")
         window_resto8.geometry("1280x720")
         window_resto8.configure(bg="black")
         window_resto8.resizable(True, True)
+        window_resto8.state('zoomed')
 
         img_bg = Image.open("Kelompok-13/menunatahati.png")
         img_bg = img_bg.resize((1280, 720))
@@ -440,7 +436,7 @@ def halaman_utama():
         bg_label.place(x=0, y=0, relwidth=1, relheight=1)
 
         frame1 = Frame(window_resto8, width=300, height=70, bg="black")
-        frame1.place(x=490, y=610)
+        frame1.place(x=490, y=600)
 
         def back_to_previous():
             window_resto8.destroy()
@@ -451,17 +447,20 @@ def halaman_utama():
 
         def proceed_to_order():
             window_resto8.destroy()
-            halaman_reservasi.halaman_order()
+            halaman_order()
 
         order_button = tk.Button(frame1, text="Order", command=proceed_to_order, fg="black", bg="orange", font=("Arial", 14, "bold"))
         order_button.place(x=200, y=15)
 
-    window1.destroy()
-    window3 = tk.Tk()
+        window_resto8.mainloop()
+
+    window1.withdraw()
+    window3 = tk.Toplevel(window1)
     window3.title("Pemilihan Resto")
     window3.geometry("1280x720")
     window3.configure(bg="black")
     window3.resizable(True, True)
+    window3.state('zoomed')
 
     label = tk.Label(window3, text="Silahkan Pilih Resto yang Ingin Anda Kunjungi", fg="white", bg="black", font=("Helvetica", 18, "bold"))
     label.place(x=370, y=10)
@@ -1075,9 +1074,268 @@ def halaman_utama():
     text.config(state=DISABLED)  # Menonaktifkan edit
     text.place(x=185, y=110)
 
-
     window3.mainloop()
-halaman_login()
-conn.close()
 
+def halaman_order():
+    ctk.set_appearance_mode("dark")
+    ctk.set_default_color_theme("dark-blue")
+
+    app = ctk.CTk()
+    app.title("Restaurant Reservation")
+    app.geometry("1280x720")
+    
+
+    frame = ctk.CTkFrame(app, corner_radius=15)
+    frame.pack(fill='both', expand=True, padx=20, pady=20)
+
+    occupied_tables = set()
+
+    def add_entry(parent):
+        entry = ctk.CTkEntry(parent, height=30, border_width=2, corner_radius=10)
+        entry.pack(padx=10, pady=5, fill='x')
+        return entry
+
+    def choose_table():
+        app.withdraw()
+        table_window = ctk.CTkToplevel(app)
+        table_window.title("Choose Table")
+        table_window.geometry("1280x720")
+        table_window.resizable(False, False)
+        app.state('maximized')
+
+        def table_selected(table_number):
+            table_entry.configure(state='normal')
+            table_entry.delete(0, tk.END)
+            table_entry.insert(0, f"Table {table_number}")
+            table_entry.configure(state='readonly')
+            occupied_tables.add(table_number)
+            table_window.destroy()
+
+        ctk.CTkLabel(table_window, text="Select a Table:", font=("Arial", 16)).pack(pady=10)
         
+        table_frame = ctk.CTkFrame(table_window)
+        table_frame.pack(pady=5, padx=5, fill='both', expand=True)
+
+        for row in range(5):
+            row_frame = ctk.CTkFrame(table_frame)
+            row_frame.pack(fill='x')
+            for col in range(4):
+                table_number = row * 4 + col + 1
+                button_state = "normal" if table_number not in occupied_tables else "disabled"
+                ctk.CTkButton(row_frame, text=f"Table {table_number}", command=lambda tn=table_number: table_selected(tn),
+                            state=button_state, height=30, border_width=2, corner_radius=10).pack(side='left', padx=5, pady=5)
+
+    def submit_reservation():
+        name = name_entry.get()
+        phone = phone_entry.get()
+        seats = seats_entry.get()
+        date = f"{int(day_combobox.get()):02d}-{int(month_combobox.get()):02d}-{year_combobox.get()}"
+        time = f"{hour_combobox.get()}:{minute_combobox.get()}"
+        table = table_entry.get()
+
+        if not name or not phone or not seats or not date or not time or not table:
+            messagebox.showwarning("Input Error", "All fields are required!")
+            return
+
+        try:
+            seats = int(seats)
+        except ValueError:
+            messagebox.showwarning("Input Error", "Number of seats must be a number!")
+            return
+
+        show_payment_page(name, phone, seats, date, time, table)
+
+    def show_payment_page(name, phone, seats, date, time, table):
+        for widget in frame.winfo_children():
+            widget.destroy()
+
+        reservation_details = (f"Name: {name}\n"
+                            f"Phone: {phone}\n"
+                            f"Number of Seats: {seats}\n"
+                            f"Date: {date}\n"
+                            f"Time: {time}\n"
+                            f"Table: {table}")
+
+        details_frame = ctk.CTkFrame(frame, corner_radius=10)
+        details_frame.pack(padx=10, pady=5, fill='x', expand=True)
+
+        ctk.CTkLabel(details_frame, text="Reservation Details", font=("Arial", 14, "bold")).pack(padx=10, pady=5)
+        ctk.CTkLabel(details_frame, text=reservation_details, justify='left').pack(padx=10, pady=5)
+
+        ctk.CTkLabel(frame, text="Choose Payment Method", font=("Arial", 14)).pack(padx=10, pady=5)
+
+        payment_methods_frame = ctk.CTkFrame(frame, corner_radius=10)
+        payment_methods_frame.pack(padx=10, pady=5, fill='x', expand=True)
+
+        payment_methods = ["QRIS", "E-Wallet", "Bank Transfer"]
+        payment_method = tk.StringVar(value=payment_methods[0])
+
+        def show_payment_options(method):
+            for widget in payment_options_frame.winfo_children():
+                widget.destroy()
+
+            if method == "E-Wallet":
+                options = ["ShopeePay", "GoPay", "Dana", "OVO"]
+            elif method == "Bank Transfer":
+                options = ["BNI", "BRI", "BCA", "Mandiri", "BSI"]
+            else:
+                options = []
+
+            for option in options:
+                ctk.CTkButton(payment_options_frame, text=option, command=lambda opt=option: show_account_form(opt, name, phone, seats, date, time, table, method),
+                            height=30, border_width=2, corner_radius=10).pack(anchor='center', padx=20, pady=5)
+
+        for method in payment_methods:
+            ctk.CTkButton(payment_methods_frame, text=method, command=lambda m=method: show_payment_options(m),
+                        height=30, border_width=2, corner_radius=10).pack(anchor='center', padx=20, pady=5)
+
+        payment_options_frame = ctk.CTkFrame(frame, corner_radius=10)
+        payment_options_frame.pack(padx=10, pady=5, fill='x')
+
+        back_button = ctk.CTkButton(frame, text="Back", command=show_reservation_page, height=30, border_width=2, corner_radius=10)
+        back_button.pack(padx=10, pady=20, side='bottom')
+
+        frame.pack(fill='both', expand=True)
+
+    def show_account_form(option, name, phone, seats, date, time, table, payment_method):
+        for widget in frame.winfo_children():
+            widget.destroy()
+
+        ctk.CTkLabel(frame, text=f"Payment with {option}", font=("Arial", 16)).pack(padx=10, pady=5)
+        ctk.CTkLabel(frame, text="Name Account").pack(padx=10, pady=5)
+        name_account_entry = ctk.CTkEntry(frame, height=30, border_width=2, corner_radius=10)
+        name_account_entry.pack(padx=10, pady=5, fill='x')
+
+        ctk.CTkLabel(frame, text="Account Number").pack(padx=10, pady=5)
+        account_number_entry = ctk.CTkEntry(frame, height=30, border_width=2, corner_radius=10)
+        account_number_entry.pack(padx=10, pady=5, fill='x')
+
+        def submit_payment():
+            name_account = name_account_entry.get()
+            account_number = account_number_entry.get()
+            if not name_account or not account_number:
+                messagebox.showwarning("Input Error", "All fields are required!")
+                return
+            create_ticket_page(name, phone, seats, date, time, table, payment_method, name_account, account_number)
+
+        submit_button = ctk.CTkButton(frame, text="Print e-Ticket", command=submit_payment, height=30, border_width=2, corner_radius=10)
+        submit_button.pack(padx=10, pady=20)
+
+        back_button = ctk.CTkButton(frame, text="Back", command=lambda: show_payment_page(name, phone, seats, date, time, table), height=30, border_width=2, corner_radius=10)
+        back_button.pack(padx=10, pady=20, side='bottom')
+
+        frame.pack(fill='both', expand=True)
+
+    def create_ticket_page(name, phone, seats, date, time, table, payment_method, name_account, account_number):
+        ticket_details = (f"--- E-Ticket ---\n\n"
+                        f"Name: {name}\n"
+                        f"Phone: {phone}\n"
+                        f"Number of Seats: {seats}\n"
+                        f"Date: {date}\n"
+                        f"Time: {time}\n"
+                        f"Table: {table}\n"
+                        f"Payment Method: {payment_method}\n"
+                        f"Account Name: {name_account}\n"
+                        f"Account Number: {account_number}")
+
+        html_content = f"""
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>e-Ticket</title>
+            <style>
+                body {{
+                    font-family: Arial, sans-serif;
+                    text-align: center;
+                    padding: 20px;
+                }}
+                .ticket {{
+                    border: 1px solid #000;
+                    padding: 20px;
+                    border-radius: 10px;
+                }}
+                h2 {{
+                    margin-top: 0;
+                }}
+            </style>
+        </head>
+        <body>
+            <div class="ticket">
+                <h2>Restaurant e-Ticket</h2>
+                <p><strong>Name:</strong> {name}</p>
+                <p><strong>Phone:</strong> {phone}</p>
+                <p><strong>Number of Seats:</strong> {seats}</p>
+                <p><strong>Date:</strong> {date}</p>
+                <p><strong>Time:</strong> {time}</p>
+                <p><strong>Table:</strong> {table}</p>
+                <p><strong>Payment Method:</strong> {payment_method}</p>
+                <p><strong>Account Name:</strong> {name_account}</p>
+                <p><strong>Account Number:</strong> {account_number}</p>
+            </div>
+        </body>
+        </html>
+        """
+
+        file_path = os.path.join(os.getcwd(), "e_ticket.html")
+        with open(file_path, 'w') as file:
+            file.write(html_content)
+
+        webbrowser.open(f"file://{file_path}")
+
+    def show_reservation_page():
+        for widget in frame.winfo_children():
+            widget.destroy()
+
+        global name_entry, phone_entry, seats_entry, day_combobox, month_combobox, year_combobox, hour_combobox, minute_combobox, table_entry
+
+        ctk.CTkLabel(frame, text="Make a Reservation", font=("Arial", 20)).pack(padx=10, pady=20)
+
+        name_entry = add_entry(frame)
+        name_entry.insert(0, "Name")
+
+        phone_entry = add_entry(frame)
+        phone_entry.insert(0, "Phone Number")
+
+        seats_entry = add_entry(frame)
+        seats_entry.insert(0, "Number of Seats")
+
+        ctk.CTkLabel(frame, text="Date").pack(padx=10, pady=5)
+        date_frame = ctk.CTkFrame(frame)
+        date_frame.pack(pady=5)
+        
+        day_combobox = ctk.CTkComboBox(date_frame, values=[str(i).zfill(2) for i in range(1, 32)], width=50)
+        day_combobox.pack(side='left', padx=5)
+        month_combobox = ctk.CTkComboBox(date_frame, values=[str(i).zfill(2) for i in range(1, 13)], width=50)
+        month_combobox.pack(side='left', padx=2)
+        year_combobox = ctk.CTkComboBox(date_frame, values=[str(i) for i in range(2024, 2030)], width=60)
+        year_combobox.pack(side='left', padx=2)
+
+        ctk.CTkLabel(frame, text="Time").pack(padx=10, pady=5)
+        time_frame = ctk.CTkFrame(frame)
+        time_frame.pack(pady=5)
+        
+        hour_combobox = ctk.CTkComboBox(time_frame, values=[str(i).zfill(2) for i in range(0, 24)], width=50)
+        hour_combobox.pack(side='left', padx=2)
+        minute_combobox = ctk.CTkComboBox(time_frame, values=[str(i).zfill(2) for i in range(0, 60)], width=50)
+        minute_combobox.pack(side='left', padx=2)
+
+        table_entry = add_entry(frame)
+        table_entry.insert(0, "Table")
+        table_entry.configure(state='readonly')
+        choose_table_button = ctk.CTkButton(frame, text="Choose Table", command=choose_table, height=30, border_width=2, corner_radius=10)
+        choose_table_button.pack(pady=5)
+
+        submit_button = ctk.CTkButton(frame, text="Submit Reservation", command=submit_reservation, height=30, border_width=2, corner_radius=10)
+        submit_button.pack(pady=20)
+
+        frame.pack(fill='both', expand=True)
+
+    show_reservation_page()
+    
+    app.mainloop()
+
+halaman_login()
+# Jangan lupa untuk menutup koneksi database setelah selesai
+conn.close()

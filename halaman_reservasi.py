@@ -259,3 +259,4 @@ def halaman_order():
     show_reservation_page()
 
     app.mainloop()
+halaman_order()
