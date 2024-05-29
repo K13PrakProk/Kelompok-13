@@ -2,53 +2,62 @@ from tkinter import *
 import tkinter as tk
 from tkinter import messagebox
 from PIL import Image, ImageTk
-import sqlite3
+import csv
 import re
 import customtkinter as ctk
 import webbrowser
 import os
 
-# Membuat atau terhubung ke database
-conn = sqlite3.connect('user_data.db')
-c = conn.cursor()
+# Nama file CSV yang akan digunakan
+csv_file = 'user_data.csv'
 
-# Membuat tabel 'users' jika belum ada
-c.execute('''CREATE TABLE IF NOT EXISTS users
-             (username TEXT PRIMARY KEY, password TEXT, email TEXT)''')
-
-# Fungsi registrasi
-def update_table():
+# Fungsi untuk menambahkan header ke file CSV jika belum ada
+def initialize_csv():
     try:
-        c.execute("ALTER TABLE users ADD COLUMN email TEXT")
-        conn.commit()
-    except sqlite3.OperationalError:
-        # Jika kolom sudah ada, maka akan terjadi error dan kita bisa mengabaikannya
-        pass
+        with open(csv_file, mode='x', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(['username', 'password', 'email', 'nama_lengkap'])
+    except FileExistsError:
+        pass  # File sudah ada, lanjutkan saja
 
-# Panggil fungsi ini sekali untuk memperbarui tabel
-update_table()
+# Panggil fungsi ini sekali untuk membuat file CSV dan header-nya jika belum ada
+initialize_csv()
 
 # Fungsi registrasi
-def register(username, password, email):
+def register(username, password, email, nama_lengkap):
     try:
         if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
             messagebox.showerror("Error", "Email tidak valid. Silakan coba lagi.")
             return
-        c.execute("INSERT INTO users (username, password, email) VALUES (?, ?, ?)", (username, password, email))
-        conn.commit()
-        messagebox.showinfo("Success", "Registrasi berhasil!")
-        
-    except sqlite3.IntegrityError:
-        messagebox.showerror("Error", "Username sudah digunakan. Silakan coba lagi.")
+
+        with open(csv_file, mode='r', newline='') as file:
+            reader = csv.DictReader(file)
+            for row in reader:
+                if row['username'] == username:
+                    messagebox.showerror("Error", "Username sudah digunakan. Silakan coba lagi.")
+                    return
+
+        with open(csv_file, mode='a', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow([username, password, email, nama_lengkap])
+            messagebox.showinfo("Success", "Registrasi berhasil!")
+
+    except Exception as e:
+        messagebox.showerror("Error", f"Terjadi kesalahan: {str(e)}")
 
 # Fungsi login
 def login(username, password):
-    c.execute("SELECT * FROM users WHERE username=? AND password=?", (username, password))
-    if c.fetchone() is not None:
-        messagebox.showinfo("Success", "Login berhasil!")
-        halaman_utama()
-    else:
-        messagebox.showerror("Error", "Username atau password salah.")
+    try:
+        with open(csv_file, mode='r', newline='') as file:
+            reader = csv.DictReader(file)
+            for row in reader:
+                if row['username'] == username and row['password'] == password:
+                    messagebox.showinfo("Success", "Login berhasil!")
+                    halaman_utama()
+                    return
+            messagebox.showerror("Error", "Username atau password salah.")
+    except Exception as e:
+        messagebox.showerror("Error", f"Terjadi kesalahan: {str(e)}")
 
 def halaman_login():
     global username_entry, password_entry, window1
@@ -155,10 +164,11 @@ def halaman_login():
     window1.mainloop()
 
 def process_registration():
+    new_namalengkap = new_namalengkap_entry.get()
     new_username = new_username_entry.get()
     new_password = new_password_entry.get()
     new_email = new_email_entry.get()  # Fetch email from entry field
-    register(new_username, new_password, new_email)  # Pass email to register function
+    register(new_username, new_password, new_email, new_namalengkap)
 
 def halaman_utama():
     def on_label_click_resto1():
@@ -1329,5 +1339,3 @@ def halaman_order():
     app.mainloop()
 
 halaman_login()
-# Jangan lupa untuk menutup koneksi database setelah selesai
-conn.close()
