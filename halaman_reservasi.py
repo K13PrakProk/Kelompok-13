@@ -3,6 +3,29 @@ import tkinter as tk
 from tkinter import messagebox
 import webbrowser
 import os
+import sqlite3
+
+# Create the database and reservation table
+conn = sqlite3.connect('reservations.db')
+cursor = conn.cursor()
+cursor.execute('''
+CREATE TABLE IF NOT EXISTS reservations (
+    id INTEGER PRIMARY KEY,
+    name TEXT,
+    phone TEXT,
+    seats INTEGER,
+    date TEXT,
+    time TEXT,
+    table_number INTEGER,
+    payment_method TEXT,
+    name_account TEXT,
+    account_number TEXT
+    restaurant_name TEXT,
+    dp_amount REAL
+)
+''')
+conn.commit()
+
 def halaman_order():
     ctk.set_appearance_mode("dark")
     ctk.set_default_color_theme("dark-blue")
@@ -14,14 +37,30 @@ def halaman_order():
     frame = ctk.CTkFrame(app, corner_radius=15)
     frame.pack(fill='both', expand=True, padx=20, pady=20)
 
-    occupied_tables = set()
-
-    def add_entry(parent):
+    def add_entry_with_placeholder(parent, placeholder):
         entry = ctk.CTkEntry(parent, height=30, border_width=2, corner_radius=10)
         entry.pack(padx=10, pady=5, fill='x')
+        entry.insert(0, placeholder)
+        entry.bind("<FocusIn>", lambda event: on_focus_in(event, placeholder))
+        entry.bind("<FocusOut>", lambda event: on_focus_out(event, placeholder))
         return entry
 
+    def on_focus_in(event, placeholder):
+        if event.widget.get() == placeholder:
+            event.widget.delete(0, tk.END)
+            event.widget.config(fg='black')
+
+    def on_focus_out(event, placeholder):
+        if not event.widget.get():
+            event.widget.insert(0, placeholder)
+            event.widget.config(fg='grey')
+
+    def get_occupied_tables():
+        cursor.execute('SELECT table_number FROM reservations')
+        return {row[0] for row in cursor.fetchall()}
+
     def choose_table():
+        occupied_tables = get_occupied_tables()
         table_window = ctk.CTkToplevel(app)
         table_window.title("Choose Table")
         table_window.geometry("1280x720")
@@ -32,7 +71,6 @@ def halaman_order():
             table_entry.delete(0, tk.END)
             table_entry.insert(0, f"Table {table_number}")
             table_entry.configure(state='readonly')
-            occupied_tables.add(table_number)
             table_window.destroy()
 
         ctk.CTkLabel(table_window, text="Select a Table:", font=("Arial", 16)).pack(pady=10)
@@ -57,7 +95,7 @@ def halaman_order():
         time = f"{hour_combobox.get()}:{minute_combobox.get()}"
         table = table_entry.get()
 
-        if not name or not phone or not seats or not date or not time or not table:
+        if not name or name == "Name" or not phone or phone == "Phone Number" or not seats or seats == "Number of Seats" or not date or not time or not table:
             messagebox.showwarning("Input Error", "All fields are required!")
             return
 
@@ -67,7 +105,13 @@ def halaman_order():
             messagebox.showwarning("Input Error", "Number of seats must be a number!")
             return
 
-        show_payment_page(name, phone, seats, date, time, table)
+        table_number = int(table.split()[1])
+        cursor.execute('SELECT * FROM reservations WHERE table_number = ? AND date = ? AND time = ?', (table_number, date, time))
+        if cursor.fetchone():
+            messagebox.showwarning("Input Error", "Table is already reserved for the selected date and time!")
+            return
+
+        show_payment_page(name, phone, seats, date, time, table_number)
 
     def show_payment_page(name, phone, seats, date, time, table):
         for widget in frame.winfo_children():
@@ -151,6 +195,12 @@ def halaman_order():
         frame.pack(fill='both', expand=True)
 
     def create_ticket_page(name, phone, seats, date, time, table, payment_method, name_account, account_number):
+        cursor.execute('''
+            INSERT INTO reservations (name, phone, seats, date, time, table_number, payment_method, name_account, account_number)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ''', (name, phone, seats, date, time, table, payment_method, name_account, account_number))
+        conn.commit()
+
         ticket_details = (f"--- E-Ticket ---\n\n"
                         f"Name: {name}\n"
                         f"Phone: {phone}\n"
@@ -208,6 +258,10 @@ def halaman_order():
 
         webbrowser.open(f"file://{file_path}")
 
+        # Adding a button for making a new reservation
+        new_reservation_button = ctk.CTkButton(frame, text="Make a New Reservation", command=show_reservation_page, height=30, border_width=2, corner_radius=10)
+        new_reservation_button.pack(padx=10, pady=20)
+
     def show_reservation_page():
         for widget in frame.winfo_children():
             widget.destroy()
@@ -216,14 +270,9 @@ def halaman_order():
 
         ctk.CTkLabel(frame, text="Make a Reservation", font=("Arial", 20)).pack(padx=10, pady=20)
 
-        name_entry = add_entry(frame)
-        name_entry.insert(0, "Name")
-
-        phone_entry = add_entry(frame)
-        phone_entry.insert(0, "Phone Number")
-
-        seats_entry = add_entry(frame)
-        seats_entry.insert(0, "Number of Seats")
+        name_entry = add_entry_with_placeholder(frame, "Name")
+        phone_entry = add_entry_with_placeholder(frame, "Phone Number")
+        seats_entry = add_entry_with_placeholder(frame, "Number of Seats")
 
         ctk.CTkLabel(frame, text="Date").pack(padx=10, pady=5)
         date_frame = ctk.CTkFrame(frame)
@@ -245,8 +294,7 @@ def halaman_order():
         minute_combobox = ctk.CTkComboBox(time_frame, values=[str(i).zfill(2) for i in range(0, 60)], width=50)
         minute_combobox.pack(side='left', padx=2)
 
-        table_entry = add_entry(frame)
-        table_entry.insert(0, "Table")
+        table_entry = add_entry_with_placeholder(frame, "Table")
         table_entry.configure(state='readonly')
         choose_table_button = ctk.CTkButton(frame, text="Choose Table", command=choose_table, height=30, border_width=2, corner_radius=10)
         choose_table_button.pack(pady=5)
@@ -259,4 +307,5 @@ def halaman_order():
     show_reservation_page()
 
     app.mainloop()
+
 halaman_order()
