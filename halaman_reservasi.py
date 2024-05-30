@@ -33,6 +33,7 @@ def halaman_order():
     app = ctk.CTk()
     app.title("Restaurant Reservation")
     app.geometry("1280x720")
+    app.state('zoomed')
 
     frame = ctk.CTkFrame(app, corner_radius=15)
     frame.pack(fill='both', expand=True, padx=20, pady=20)
@@ -65,6 +66,9 @@ def halaman_order():
         table_window.title("Choose Table")
         table_window.geometry("1280x720")
         table_window.resizable(False, False)
+        table_window.transient(app)  # Make this window modal
+        table_window.grab_set()
+        table_window.state('zoomed')
 
         def table_selected(table_number):
             table_entry.configure(state='normal')
@@ -85,7 +89,7 @@ def halaman_order():
                 table_number = row * 4 + col + 1
                 button_state = "normal" if table_number not in occupied_tables else "disabled"
                 ctk.CTkButton(row_frame, text=f"Table {table_number}", command=lambda tn=table_number: table_selected(tn),
-                            state=button_state, height=30, border_width=2, corner_radius=10).pack(side='left', padx=5, pady=5)
+                            state=button_state, height=30, border_width=2, corner_radius=10).pack(side='left', padx=90, pady=45)
 
     def submit_reservation():
         name = name_entry.get()
@@ -278,20 +282,20 @@ def halaman_order():
         date_frame = ctk.CTkFrame(frame)
         date_frame.pack(pady=5)
         
-        day_combobox = ctk.CTkComboBox(date_frame, values=[str(i).zfill(2) for i in range(1, 32)], width=50)
+        day_combobox = ctk.CTkComboBox(date_frame, values=[str(i).zfill(2) for i in range(1, 32)], width=60)
         day_combobox.pack(side='left', padx=5)
-        month_combobox = ctk.CTkComboBox(date_frame, values=[str(i).zfill(2) for i in range(1, 13)], width=50)
+        month_combobox = ctk.CTkComboBox(date_frame, values=[str(i).zfill(2) for i in range(1, 13)], width=60)
         month_combobox.pack(side='left', padx=2)
-        year_combobox = ctk.CTkComboBox(date_frame, values=[str(i) for i in range(2024, 2030)], width=60)
+        year_combobox = ctk.CTkComboBox(date_frame, values=[str(i) for i in range(2024, 2030)], width=70)
         year_combobox.pack(side='left', padx=2)
 
         ctk.CTkLabel(frame, text="Time").pack(padx=10, pady=5)
         time_frame = ctk.CTkFrame(frame)
         time_frame.pack(pady=5)
         
-        hour_combobox = ctk.CTkComboBox(time_frame, values=[str(i).zfill(2) for i in range(0, 24)], width=50)
+        hour_combobox = ctk.CTkComboBox(time_frame, values=[str(i).zfill(2) for i in range(0, 24)], width=60)
         hour_combobox.pack(side='left', padx=2)
-        minute_combobox = ctk.CTkComboBox(time_frame, values=[str(i).zfill(2) for i in range(0, 60)], width=50)
+        minute_combobox = ctk.CTkComboBox(time_frame, values=[str(i).zfill(2) for i in range(0, 60)], width=60)
         minute_combobox.pack(side='left', padx=2)
 
         table_entry = add_entry_with_placeholder(frame, "Table")
@@ -302,10 +306,17 @@ def halaman_order():
         submit_button = ctk.CTkButton(frame, text="Submit Reservation", command=submit_reservation, height=30, border_width=2, corner_radius=10)
         submit_button.pack(pady=20)
 
+        back_button = ctk.CTkButton(frame, text="Back", command=choose_table, height=30, border_width=2, corner_radius=10)
+        back_button.pack(padx=30, pady=20)
+
         frame.pack(fill='both', expand=True)
 
     show_reservation_page()
 
     app.mainloop()
+
+    def back_to_halaman_utama():
+        for widget in frame.winfo_children():
+            widget.destroy()
 
 halaman_order()
